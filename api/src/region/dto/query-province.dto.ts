@@ -55,6 +55,6 @@ export class QueryProvinceDto {
       return undefined;
     }
   })
-  @Type(() => SortProvinceDto, { each: true })
+  @Type(() => SortProvinceDto)
   sort?: SortProvinceDto[] | null;
 }

@@ -67,6 +67,13 @@ export class ProvincesRelationalRepository implements ProvinceRepository {
     return entity ? ProvinceMapper.toDomain(entity) : null;
   }
 
+  async findByName(name: string): Promise<NullableType<Province>> {
+    const entity = await this.provinceRepository.findOne({
+      where: { name },
+    });
+    return entity ? ProvinceMapper.toDomain(entity) : null;
+  }
+
   async findByIsoCode(isoCode: Province['isoCode']): Promise<NullableType<Province>> {
     if (!isoCode) return null;
     const entity = await this.provinceRepository.findOne({ where: { isoCode } });

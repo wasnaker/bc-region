@@ -24,6 +24,8 @@ export abstract class ProvinceRepository {
 
   abstract findById(id: Province['id']): Promise<NullableType<Province>>;
 
+  abstract findByName(name: string): Promise<NullableType<Province>>;
+
   abstract findByIsoCode(
     isoCode: Province['isoCode'],
   ): Promise<NullableType<Province>>;

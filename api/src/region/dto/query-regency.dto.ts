@@ -13,6 +13,17 @@ export class FilterRegencyDto {
   @IsOptional()
   @IsEnum(RegencyTypeEnum)
   type?: RegencyTypeEnum;
+
+  @ApiPropertyOptional({ name: 'province_id', example: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => {
+    if (value !== undefined && value !== null) {
+      return Number(value);
+    }
+    return undefined;
+  })
+  province_id?: Regency['provinceId'];
 }
 
 export class SortRegencyDto {
@@ -39,6 +50,11 @@ export class QueryRegencyDto {
   @IsOptional()
   limit?: number;
 
+  @ApiPropertyOptional({ name: 'province_id', example: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  provinceId?: Regency['provinceId'];
+
   @ApiPropertyOptional({ type: String })
   @IsOptional()
   @Transform(({ value }) => {
@@ -60,6 +76,6 @@ export class QueryRegencyDto {
       return undefined;
     }
   })
-  @Type(() => SortRegencyDto, { each: true })
+  @Type(() => SortRegencyDto)
   sort?: SortRegencyDto[] | null;
 }
