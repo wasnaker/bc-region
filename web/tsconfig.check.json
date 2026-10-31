@@ -1,7 +1,7 @@
 {
-  "extends": "/www/wwwroot/brocoders/brocoders-react-web/tsconfig.json",
+  "extends": "../../../brocoders-react-web/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "/www/wwwroot/brocoders/brocoders-react-web",
+    "baseUrl": "../../../brocoders-react-web",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -12,6 +12,6 @@
   "include": [
     "src/modules/region/**/*.ts",
     "src/modules/region/**/*.tsx",
-    "/www/wwwroot/brocoders/brocoders-react-web/src/types/lucide-react.d.ts"
+    "../../../brocoders-react-web/src/types/lucide-react.d.ts"
   ]
 }

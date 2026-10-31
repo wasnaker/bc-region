@@ -1,19 +1,20 @@
 # Integrasi Modul Region ke brocoders-react-web
 
 Modul ini source-only — disalin ke host app, bukan dijalankan sendiri.
+Path di bawah memakai variabel: `$MODULE` = repo ini, `$HOST_WEB` = root repo `brocoders-react-web`.
 
 ## 1. Salin kode modul
 
 ```bash
-cp -r web/src/modules/region  /www/wwwroot/brocoders/brocoders-react-web/src/modules/region
+cp -r "$MODULE/web/src/modules/region" "$HOST_WEB/src/modules/region"
 ```
 
 ## 2. Salin terjemahan i18n
 
 ```bash
 for lang in en id ja ko zh; do
-  cp web/src/services/i18n/locales/$lang/module-region.json \
-     /www/wwwroot/brocoders/brocoders-react-web/src/services/i18n/locales/$lang/
+  cp "$MODULE/web/src/services/i18n/locales/$lang/module-region.json" \
+     "$HOST_WEB/src/services/i18n/locales/$lang/"
 done
 ```
 
@@ -47,3 +48,20 @@ Envelope respons list: `{ data, hasNextPage }` (lihat `api/INTEGRATION.md` di fo
 - Saat panel terbuka, tabel hanya menampilkan kolom `primary: true`.
 - Toolbar panel: Edit + Delete + toggle ◀/▶.
 - CRUD via Dialog terpisah; sukses → `invalidateQueries` → select item baru.
+
+## Verifikasi type-check (opsional)
+
+`web/tsconfig.check.json` extends tsconfig host via **relative path**
+(`../../../brocoders-react-web/...`) — asumsi kedua repo berdampingan di
+parent yang sama:
+
+```
+brocoders/
+├── brocoders-modules/bc-region/   ← repo ini
+└── brocoders-react-web/           ← host
+```
+
+```bash
+cd "$MODULE/web"
+"$HOST_WEB/node_modules/.bin/tsc" -p tsconfig.check.json
+```
