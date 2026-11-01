@@ -27,19 +27,19 @@ Ikuti pola modul `post` — modul dimuat lewat registry core:
 
 **Manifest hanya mendaftarkan menu — route halaman tetap harus dibuat** di host
 (Next.js tidak bisa generate route dari manifest). Buat 2 file, ikuti pola
-`src/app/[language]/admin-panel/roles/`:
+`src/app/admin/region/`:
 
-`src/app/[language]/admin-panel/region/page.tsx` — server component + metadata:
+`src/app/admin/region/page.tsx` — server component + metadata (the content component can reuse the existing auth-guarded implementation):
 
 ```tsx
 import { getServerTranslation } from "@/services/i18n";
-import Region from "./page-content";
+import { getRequestLanguage } from "@/services/i18n/get-request-language";
+import Region from "@/app/[language]/admin/region/page-content";
 
 export async function generateMetadata(props: {
-  params: Promise<{ language: string }>;
 }) {
-  const params = await props.params;
-  const { t } = await getServerTranslation(params.language, "module-region");
+  const language = await getRequestLanguage();
+  const { t } = await getServerTranslation(language, "module-region");
   return { title: t("module-region:title") };
 }
 
@@ -48,7 +48,7 @@ export default function Page() {
 }
 ```
 
-`src/app/[language]/admin-panel/region/page-content.tsx` — gate auth + render modul:
+`src/app/[language]/admin/region/page-content.tsx` — gate auth + render modul:
 
 ```tsx
 "use client";
@@ -64,7 +64,7 @@ function Region() {
 export default withPageRequiredAuth(Region, { roles: [RoleEnum.ADMIN] });
 ```
 
-Halaman tersedia di **`/{language}/admin-panel/region`** (menu item `menu` di manifest, position 60).
+Halaman tersedia di **`/admin/region`** (menu item `menu` di manifest, position 60).
 
 ## 4. Endpoint backend yang dipakai
 
