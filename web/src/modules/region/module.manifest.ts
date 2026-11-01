@@ -4,7 +4,7 @@ import MapPin from "lucide-react/dist/esm/icons/map-pin";
 /**
  * Manifest modul Region.
  *
- * Modul ini menyediakan halaman admin-panel di /admin-panel/region.
+ * Modul ini menyediakan halaman admin di /admin/region.
  * String UI memakai namespace "module-region" (lihat
  * src/services/i18n/locales/<lang>/module-region.json).
  */
@@ -14,7 +14,7 @@ export default defineModuleManifest({
     {
       slug: "region",
       label: { namespace: "module-region", key: "menu" },
-      href: "/admin-panel/region",
+      href: "/admin/region",
       position: 60,
       permission: "read:user",
       icon: MapPin,
