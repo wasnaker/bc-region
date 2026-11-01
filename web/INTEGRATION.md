@@ -18,11 +18,51 @@ for lang in en id ja ko zh; do
 done
 ```
 
-## 3. Daftarkan manifest
+## 3. Daftarkan manifest + route halaman
 
 Ikuti pola modul `post` — modul dimuat lewat registry core:
 
-- `src/core/modules/registry.ts` — tambahkan import manifest region.
+- `src/core/modules/registry.ts` — otomatis oleh `node scripts/generate-module-registry.mjs`
+  (atau otomatis saat `npm run deploy`).
+
+**Manifest hanya mendaftarkan menu — route halaman tetap harus dibuat** di host
+(Next.js tidak bisa generate route dari manifest). Buat 2 file, ikuti pola
+`src/app/[language]/admin-panel/roles/`:
+
+`src/app/[language]/admin-panel/region/page.tsx` — server component + metadata:
+
+```tsx
+import { getServerTranslation } from "@/services/i18n";
+import Region from "./page-content";
+
+export async function generateMetadata(props: {
+  params: Promise<{ language: string }>;
+}) {
+  const params = await props.params;
+  const { t } = await getServerTranslation(params.language, "module-region");
+  return { title: t("module-region:title") };
+}
+
+export default function Page() {
+  return <Region />;
+}
+```
+
+`src/app/[language]/admin-panel/region/page-content.tsx` — gate auth + render modul:
+
+```tsx
+"use client";
+
+import { RoleEnum } from "@/services/api/types/role";
+import withPageRequiredAuth from "@/services/auth/with-page-required-auth";
+import { RegionPage } from "@/modules/region";
+
+function Region() {
+  return <RegionPage />;
+}
+
+export default withPageRequiredAuth(Region, { roles: [RoleEnum.ADMIN] });
+```
 
 Halaman tersedia di **`/{language}/admin-panel/region`** (menu item `menu` di manifest, position 60).
 

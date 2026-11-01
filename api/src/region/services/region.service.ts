@@ -102,9 +102,18 @@ export class RegionService {
       }
     }
 
-    return this.provinceRepository.update(id, {
+    const updated = await this.provinceRepository.update(id, {
       ...updateProvinceDto,
     });
+    if (!updated) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          province: 'provinceNotExists',
+        },
+      });
+    }
+    return updated;
   }
 
   async removeProvince(id: Province['id']): Promise<void> {
@@ -204,9 +213,18 @@ export class RegionService {
       }
     }
 
-    return this.regencyRepository.update(id, {
+    const updated = await this.regencyRepository.update(id, {
       ...updateRegencyDto,
     });
+    if (!updated) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          regency: 'regencyNotExists',
+        },
+      });
+    }
+    return updated;
   }
 
   async removeRegency(id: Regency['id']): Promise<void> {
