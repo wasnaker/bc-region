@@ -27,7 +27,7 @@ bc-region/
 │       │   ├── pages/                   # RegionPage (/admin/region)
 │       │   ├── services/                # API services (useFetch pattern host)
 │       │   ├── types/                   # Province, Regency, REGENCY_TYPES
-│       │   ├── module.manifest.ts       # Menu /admin
+│       │   ├── module.manifest.ts       # Menu /admin/region
 │       │   └── index.ts
 │       └── services/i18n/locales/{en,id,ja,ko,zh}/module-region.json
 ├── api/INTEGRATION.md   # Cara integrasi backend ke brocoders-api
