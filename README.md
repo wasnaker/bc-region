@@ -24,10 +24,10 @@ bc-region/
 │       ├── modules/region/
 │       │   ├── components/              # SmallTable (panel kanan), form dialogs, tabs
 │       │   ├── hooks/                   # React Query hooks
-│       │   ├── pages/                   # RegionPage (/admin-panel/region)
+│       │   ├── pages/                   # RegionPage (/admin/region)
 │       │   ├── services/                # API services (useFetch pattern host)
 │       │   ├── types/                   # Province, Regency, REGENCY_TYPES
-│       │   ├── module.manifest.ts       # Menu admin-panel
+│       │   ├── module.manifest.ts       # Menu /admin
 │       │   └── index.ts
 │       └── services/i18n/locales/{en,id,ja,ko,zh}/module-region.json
 ├── api/INTEGRATION.md   # Cara integrasi backend ke brocoders-api
