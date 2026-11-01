@@ -26,18 +26,18 @@ Ikuti pola modul `post` — modul dimuat lewat registry core:
   (atau otomatis saat `npm run deploy`).
 
 **Manifest hanya mendaftarkan menu — route halaman tetap harus dibuat** di host
-(Next.js tidak bisa generate route dari manifest). Buat 2 file, ikuti pola
+(Next.js tidak bisa generate route dari manifest). Buat route entry di `src/app/admin/region/page.tsx`; gunakan komponen yang sudah memiliki auth guard di `src/app/[language]/admin/region/page-content.tsx` (atau buat file tersebut bila mengintegrasikan modul dari awal). Ikuti pola
 `src/app/admin/region/`:
 
 `src/app/admin/region/page.tsx` — server component + metadata (the content component can reuse the existing auth-guarded implementation):
 
 ```tsx
+import type { Metadata } from "next";
 import { getServerTranslation } from "@/services/i18n";
 import { getRequestLanguage } from "@/services/i18n/get-request-language";
 import Region from "@/app/[language]/admin/region/page-content";
 
-export async function generateMetadata(props: {
-}) {
+export async function generateMetadata(): Promise<Metadata> {
   const language = await getRequestLanguage();
   const { t } = await getServerTranslation(language, "module-region");
   return { title: t("module-region:title") };
