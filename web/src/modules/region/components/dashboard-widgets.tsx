@@ -49,7 +49,6 @@ function RegionMetric({
       href={href}
       className="block rounded-xl border bg-card p-5 transition-colors hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <p className="text-sm font-medium text-muted-foreground">{title}</p>
       <p className="mt-2 text-3xl font-semibold tabular-nums">
         {isLoading ? "…" : isError ? "—" : (value ?? 0).toLocaleString()}
       </p>
