@@ -6,7 +6,7 @@ import {
   Injectable,
   Optional,
 } from '@nestjs/common';
-import { REGION_MODULE_OPTIONS, RegionModuleOptions } from '../region.module';
+import { REGION_MODULE_OPTIONS, RegionModuleOptions } from '../region.options';
 
 interface AuthenticatedRequest {
   method: string;

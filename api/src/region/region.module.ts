@@ -1,10 +1,4 @@
-import {
-  DynamicModule,
-  InjectionToken,
-  Module,
-  Provider,
-  Type,
-} from '@nestjs/common';
+import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProvinceEntity } from './infrastructure/persistence/relational/entities/province.entity';
 import { RegencyEntity } from './infrastructure/persistence/relational/entities/regency.entity';
@@ -16,24 +10,9 @@ import { RegencyRepository } from './infrastructure/persistence/regency.reposito
 import { ProvincesRelationalRepository } from './infrastructure/persistence/relational/repositories/province.repository';
 import { RegenciesRelationalRepository } from './infrastructure/persistence/relational/repositories/regency.repository';
 import { RegionAccessGuard } from './security/region-access.guard';
-
-export interface RegionModuleOptions {
-  /** Delegate permission decisions to the host's authorization service. */
-  authorize: (
-    roleId: number | string,
-    permission: string,
-  ) => boolean | Promise<boolean>;
-}
-
-export interface RegionModuleAsyncOptions {
-  imports?: DynamicModule['imports'];
-  inject?: InjectionToken[];
-  useFactory: (...dependencies: any[]) =>
-    | RegionModuleOptions
-    | Promise<RegionModuleOptions>;
-}
-
-export const REGION_MODULE_OPTIONS = Symbol.for('@wasnaker/module-region/options');
+import { REGION_MODULE_OPTIONS, RegionModuleAsyncOptions } from './region.options';
+export { REGION_MODULE_OPTIONS } from './region.options';
+export type { RegionModuleOptions, RegionModuleAsyncOptions } from './region.options';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProvinceEntity, RegencyEntity])],
