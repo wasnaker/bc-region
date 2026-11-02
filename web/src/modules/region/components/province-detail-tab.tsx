@@ -46,7 +46,7 @@ export function ProvinceOverviewTab({ item }: ProvinceOverviewTabProps) {
 
 export function ProvinceRegenciesTab({ item: province }: ProvinceRegenciesTabProps) {
   const { t } = useTranslation("module-region");
-  const { data, isLoading } = useRegencies(String(province.id), 1, 100);
+  const { data, isLoading } = useRegencies(String(province.id), 1, 50);
 
   if (isLoading) {
     return (
