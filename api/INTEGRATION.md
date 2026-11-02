@@ -41,7 +41,9 @@ export class AppModule {}
 The module enforces `read:region`, `create:region`, `update:region` and
 `delete:region` at the API boundary. The host owns PostgreSQL, JWT
 authentication, role/permission persistence, migration execution and seed
-lifecycle. The module owns its controllers, DTOs, domain, services, entities,
+lifecycle. Configure the root NestJS TypeORM connection with
+`autoLoadEntities: true`; the module registers its entities through
+`TypeOrmModule.forFeature()` and they are then included in the host DataSource. The module owns its controllers, DTOs, domain, services, entities,
 repositories, migration and data seed.
 
 ## Migrations
