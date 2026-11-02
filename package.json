@@ -39,6 +39,16 @@
       "types": "./api/dist/region/region.entities.d.ts",
       "require": "./api/dist/region/region.entities.js",
       "default": "./api/dist/region/region.entities.js"
+    },
+    "./api/definition": {
+      "types": "./api/dist/region/region.definition.d.ts",
+      "require": "./api/dist/region/region.definition.js",
+      "default": "./api/dist/region/region.definition.js"
+    },
+    "./api/seeds": {
+      "types": "./api/dist/region/region.seeds.d.ts",
+      "require": "./api/dist/region/region.seeds.js",
+      "default": "./api/dist/region/region.seeds.js"
     }
   },
   "scripts": {
@@ -172,6 +182,12 @@
       ],
       "api/entities": [
         "api/dist/region/region.entities.d.ts"
+      ],
+      "api/definition": [
+        "api/dist/region/region.definition.d.ts"
+      ],
+      "api/seeds": [
+        "api/dist/region/region.seeds.d.ts"
       ]
     }
   }
