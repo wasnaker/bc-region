@@ -43,7 +43,10 @@ The module enforces `read:region`, `create:region`, `update:region` and
 authentication, role/permission persistence, migration execution and seed
 lifecycle. Configure the root NestJS TypeORM connection with
 `autoLoadEntities: true`; the module registers its entities through
-`TypeOrmModule.forFeature()` and they are then included in the host DataSource. The module owns its controllers, DTOs, domain, services, entities,
+`TypeOrmModule.forFeature()` and they are then included in the runtime DataSource.
+For the standalone TypeORM CLI DataSource, also import `REGION_ENTITIES` from
+`@wasnaker/module-region/api/entities` and spread it into `entities`; CLI
+DataSources do not inherit Nest module metadata. The module owns its controllers, DTOs, domain, services, entities,
 repositories, migration and data seed.
 
 ## Migrations
