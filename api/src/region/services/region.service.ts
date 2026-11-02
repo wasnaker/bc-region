@@ -40,6 +40,18 @@ export class RegionService {
       });
     }
 
+    if (createProvinceDto.isoCode) {
+      const existingIsoCode = await this.provinceRepository.findByIsoCode(
+        createProvinceDto.isoCode,
+      );
+      if (existingIsoCode) {
+        throw new UnprocessableEntityException({
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: { isoCode: 'provinceIsoCodeAlreadyExists' },
+        });
+      }
+    }
+
     return this.provinceRepository.create({
       name: createProvinceDto.name,
       isoCode: createProvinceDto.isoCode ?? null,
@@ -102,6 +114,18 @@ export class RegionService {
       }
     }
 
+    if (updateProvinceDto.isoCode) {
+      const existingIsoCode = await this.provinceRepository.findByIsoCode(
+        updateProvinceDto.isoCode,
+      );
+      if (existingIsoCode && existingIsoCode.id !== id) {
+        throw new UnprocessableEntityException({
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: { isoCode: 'provinceIsoCodeAlreadyExists' },
+        });
+      }
+    }
+
     const updated = await this.provinceRepository.update(id, {
       ...updateProvinceDto,
     });
@@ -148,6 +172,17 @@ export class RegionService {
         errors: {
           province: 'provinceNotExists',
         },
+      });
+    }
+
+    const existing = await this.regencyRepository.findByProvinceIdAndName(
+      createRegencyDto.provinceId,
+      createRegencyDto.name,
+    );
+    if (existing) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: { name: 'regencyNameAlreadyExists' },
       });
     }
 
@@ -211,6 +246,19 @@ export class RegionService {
           },
         });
       }
+    }
+
+    const targetProvinceId = updateRegencyDto.provinceId ?? regency.provinceId;
+    const targetName = updateRegencyDto.name ?? regency.name;
+    const existing = await this.regencyRepository.findByProvinceIdAndName(
+      targetProvinceId,
+      targetName,
+    );
+    if (existing && existing.id !== id) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: { name: 'regencyNameAlreadyExists' },
+      });
     }
 
     const updated = await this.regencyRepository.update(id, {

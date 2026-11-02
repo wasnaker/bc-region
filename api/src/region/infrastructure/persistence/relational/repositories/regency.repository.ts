@@ -72,6 +72,16 @@ export class RegenciesRelationalRepository implements RegencyRepository {
     return entities.map((regency) => RegencyMapper.toDomain(regency));
   }
 
+  async findByProvinceIdAndName(
+    provinceId: Regency['provinceId'],
+    name: Regency['name'],
+  ): Promise<NullableType<Regency>> {
+    const entity = await this.regencyRepository.findOne({
+      where: { provinceId: Number(provinceId), name },
+    });
+    return entity ? RegencyMapper.toDomain(entity) : null;
+  }
+
   async countByProvinceId(provinceId: Regency['provinceId']): Promise<number> {
     return this.regencyRepository.count({
       where: { provinceId: Number(provinceId) },

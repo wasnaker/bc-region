@@ -28,6 +28,11 @@ export abstract class RegencyRepository {
     provinceId: Regency['provinceId'],
   ): Promise<Regency[]>;
 
+  abstract findByProvinceIdAndName(
+    provinceId: Regency['provinceId'],
+    name: Regency['name'],
+  ): Promise<NullableType<Regency>>;
+
   abstract countByProvinceId(provinceId: Regency['provinceId']): Promise<number>;
 
   abstract countAll(): Promise<number>;
