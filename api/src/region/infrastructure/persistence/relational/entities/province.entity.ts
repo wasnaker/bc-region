@@ -9,6 +9,7 @@ import {
 
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 
+@Index('UQ_province_name', ['name'], { unique: true })
 @Entity({
   name: 'province',
 })
@@ -16,7 +17,6 @@ export class ProvinceEntity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Index()
   @Column({ type: String })
   name: string;
 

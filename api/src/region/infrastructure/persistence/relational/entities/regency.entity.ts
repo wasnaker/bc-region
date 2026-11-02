@@ -12,6 +12,7 @@ import {
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { ProvinceEntity } from './province.entity';
 
+@Index('UQ_regency_province_name', ['provinceId', 'name'], { unique: true })
 @Entity({
   name: 'regency',
 })
