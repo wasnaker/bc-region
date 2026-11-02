@@ -1,29 +1,35 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsIn,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { Regency, RegencyTypeEnum } from '../domain/regency';
 
 export class FilterRegencyDto {
-  @ApiPropertyOptional({ example: 1 })
+  @ApiPropertyOptional({ name: 'province_id', example: 1 })
   @IsOptional()
-  @Type(() => Number)
+  @Transform(({ value, obj }) => {
+    const rawValue = value ?? obj?.province_id;
+    if (rawValue === undefined || rawValue === null || rawValue === '') {
+      return undefined;
+    }
+    const parsed = Number(rawValue);
+    return Number.isFinite(parsed) ? parsed : rawValue;
+  })
+  @IsInt()
+  @Min(1)
   provinceId?: Regency['provinceId'];
 
   @ApiPropertyOptional({ enum: RegencyTypeEnum })
   @IsOptional()
   @IsEnum(RegencyTypeEnum)
   type?: RegencyTypeEnum;
-
-  @ApiPropertyOptional({ name: 'province_id', example: 1 })
-  @IsOptional()
-  @Type(() => Number)
-  @Transform(({ value }) => {
-    if (value !== undefined && value !== null) {
-      return Number(value);
-    }
-    return undefined;
-  })
-  province_id?: Regency['provinceId'];
 }
 
 export class SortRegencyDto {
@@ -32,27 +38,39 @@ export class SortRegencyDto {
   @IsString()
   orderBy: keyof Regency;
 
-  @ApiProperty()
-  @IsString()
+  @ApiProperty({ enum: ['ASC', 'DESC'] })
+  @Transform(({ value }) => String(value).toUpperCase())
+  @IsIn(['ASC', 'DESC'])
   order: string;
 }
 
 export class QueryRegencyDto {
-  @ApiPropertyOptional()
-  @Transform(({ value }) => (value ? Number(value) : 1))
-  @IsNumber()
+  @ApiPropertyOptional({ minimum: 1, default: 1 })
+  @Transform(({ value }) => (value === undefined || value === '' ? 1 : Number(value)))
+  @IsInt()
+  @Min(1)
   @IsOptional()
   page?: number;
 
-  @ApiPropertyOptional()
-  @Transform(({ value }) => (value ? Number(value) : 10))
-  @IsNumber()
+  @ApiPropertyOptional({ minimum: 1, maximum: 50, default: 10 })
+  @Transform(({ value }) => (value === undefined || value === '' ? 10 : Number(value)))
+  @IsInt()
+  @Min(1)
   @IsOptional()
   limit?: number;
 
   @ApiPropertyOptional({ name: 'province_id', example: 1 })
   @IsOptional()
-  @Type(() => Number)
+  @Transform(({ value, obj }) => {
+    const rawValue = value ?? obj?.province_id;
+    if (rawValue === undefined || rawValue === null || rawValue === '') {
+      return undefined;
+    }
+    const parsed = Number(rawValue);
+    return Number.isFinite(parsed) ? parsed : rawValue;
+  })
+  @IsInt()
+  @Min(1)
   provinceId?: Regency['provinceId'];
 
   @ApiPropertyOptional({ type: String })
