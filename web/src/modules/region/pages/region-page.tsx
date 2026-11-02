@@ -17,8 +17,6 @@ import MapPinIcon from "lucide-react/dist/esm/icons/map-pin";
 import { Suspense } from "react";
 import type { Province } from "../types/region";
 
-const PER_PAGE = 20;
-
 function PageInner() {
   const { t } = useTranslation("module-region");
   const qc = useQueryClient();
@@ -245,7 +243,6 @@ function PageInner() {
           detailLoading={detailLoading}
           tabs={tabs}
           customTabBody={customTabBody}
-          perPage={PER_PAGE}
           emptyText={tableEmptyText}
           tabEmptyText={t("detail.empty")}
           paginationOfLabel={t("table.of")}
