@@ -1,64 +1,44 @@
-# bc-region
+# Wasnaker Region module
 
-Modul data referensi wilayah administrasi Indonesia (**Province** & **Regency/Kota**) — 1 repo = 1 module, self-contained, siap diintegrasikan ke host **brocoders** (NestJS + Next.js).
+The Region module is the pilot implementation of the Wasnaker modular package
+contract. This repository is the **single source of truth** for the module's
+backend and frontend capabilities.
 
-## Isi Repo
+## Capabilities
 
+- `@wasnaker/module-region/api` — NestJS module, services, entities and seed provider.
+- `@wasnaker/module-region/api/manifest` — backend module metadata and permissions.
+- `@wasnaker/module-region/api/migrations` — PostgreSQL migration classes.
+- `@wasnaker/module-region/web` — React/Next.js page and UI exports.
+- `@wasnaker/module-region/manifest` — frontend navigation and dashboard manifest.
+- `@wasnaker/module-region/locales/<language>` — module-owned translations.
+
+A module may expose API, web, or both. Hosts install the same package and import
+only the capability they use. API and web dependencies are optional peers so an
+API-only host does not install a React runtime, and a web-only host does not
+install NestJS.
+
+## Backend build and host integration
+
+See [API integration](api/INTEGRATION.md). The API is compiled to CommonJS
+because the current NestJS host uses CommonJS. The nested `api/package.json`
+sets the package scope to CommonJS without changing the ESM web package scope.
+
+Install with an immutable Git commit SHA. Git dependency installation runs the
+package `prepare` script to build the backend output. The host owns the
+PostgreSQL connection, authentication strategy, role IDs, migration runner and
+seed lifecycle. The module owns its API implementation, schema migration and
+seed data.
+
+## Frontend integration
+
+See [Frontend package](web/PACKAGE.md). Next.js hosts transpile the web source
+package and load locale resources directly from its exports.
+
+## Development
+
+```bash
+npm install
+npm run build:api
+npm run verify:api-package
 ```
-bc-region/
-├── api/               # Backend — NestJS module (TypeORM/MySQL)
-│   └── src/
-│       ├── region/
-│       │   ├── domain/                  # Province, Regency (model + enum)
-│       │   ├── dto/                     # Create/Update/Query DTOs
-│       │   ├── services/                # RegionService (CRUD keduanya)
-│       │   ├── controllers/             # RegionController (REST /api/v1/region/*)
-│       │   ├── infrastructure/
-│       │   │   └── persistence/
-│       │   │       ├── *.repository.ts  # Abstract repository interfaces
-│       │   │       └── relational/      # TypeORM: entities, mappers, repositories
-│       │   └── region.module.ts
-│       └── utils/                       # Helper bersama (pagination, types)
-├── web/               # Frontend — React module (shadcn/ui + TanStack Query)
-│   └── src/
-│       ├── modules/region/
-│       │   ├── components/              # SmallTable (panel kanan), form dialogs, tabs
-│       │   ├── hooks/                   # React Query hooks
-│       │   ├── pages/                   # RegionPage (/admin/region)
-│       │   ├── services/                # API services (useFetch pattern host)
-│       │   ├── types/                   # Province, Regency, REGENCY_TYPES
-│       │   ├── module.manifest.ts       # Menu /admin/region
-│       │   └── index.ts
-│       └── services/i18n/locales/{en,id,ja,ko,zh}/module-region.json
-├── api/INTEGRATION.md   # Cara integrasi backend ke brocoders-api
-└── web/INTEGRATION.md   # Cara integrasi frontend ke brocoders-react-web
-```
-
-## Endpoint API (prefix `/api/v1/region`)
-
-| Method | Path | Keterangan |
-|--------|------|-----------|
-| GET | `/provinces` | List + pagination (`?page&limit&filters&sort`) |
-| GET | `/provinces/:id` | Detail |
-| POST / PATCH / DELETE | `/provinces[/:id]` | CRUD (delete → regencies ikut terhapus) |
-| GET | `/regencies` | List + filter `provinceId`, `type` |
-| GET | `/regencies/:id` | Detail |
-| POST / PATCH / DELETE | `/regencies[/:id]` | CRUD (validasi province exists) |
-
-## Pola UI: Klik Row → Panel Kanan (SmallTable)
-
-Diporting dari pola `wasnaker-frontend`, ditulis ulang dengan stack `brocoders-react-web` (shadcn/ui + TanStack Query + semantic classes):
-
-- **State `showDetail` di halaman**, bukan di komponen tabel — panel dikontrol penuh parent.
-- Klik row → set `selectedId` + `setShowDetail(true)` (auto-expand) + sinkron `window.location.hash`.
-- Panel kanan (`lg:w-7/12`): header + toolbar (Edit/Delete/toggle ◀▶) + tabs (Overview, Kab/Kota).
-- Saat panel terbuka, tabel menyusut ke `lg:w-5/12` dan hanya menampilkan kolom `primary: true`.
-- CRUD via Dialog terpisah; sukses → `invalidateQueries` → auto-select item tersimpan.
-
-## Integrasi
-
-Lihat [`api/INTEGRATION.md`](api/INTEGRATION.md) dan [`web/INTEGRATION.md`](web/INTEGRATION.md).
-
-## License
-
-[GNU General Public License v2](LICENSE)

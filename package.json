@@ -38,7 +38,8 @@
   },
   "scripts": {
     "build:api": "tsc -p api/tsconfig.build.json",
-    "prepare": "npm run build:api"
+    "prepare": "npm run build:api",
+    "verify:api-package": "node scripts/verify-api-package.mjs"
   },
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",
