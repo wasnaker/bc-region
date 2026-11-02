@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProvinceEntity } from './infrastructure/persistence/relational/entities/province.entity';
 import { RegencyEntity } from './infrastructure/persistence/relational/entities/regency.entity';
@@ -9,24 +9,34 @@ import { ProvinceRepository } from './infrastructure/persistence/province.reposi
 import { RegencyRepository } from './infrastructure/persistence/regency.repository';
 import { ProvincesRelationalRepository } from './infrastructure/persistence/relational/repositories/province.repository';
 import { RegenciesRelationalRepository } from './infrastructure/persistence/relational/repositories/regency.repository';
+import { RegionWriteGuard } from './security/region-write.guard';
 
-// NOTE: This module is relational-only (TypeORM/MySQL). The host brocoders-api
-// uses a database-config block to switch between relational (TypeORM) and
-// document (Mongoose) databases. To extend for document DB support, add a
-// similar infrastructure block following the pattern in permissions.module.ts:
-//   if (isDocumentDatabase) { MongooseModule.forFeature([...]) }
-//   else { TypeOrmModule.forFeature([entities]) }
-// with a conditional repositoryProvider array.
+export interface RegionModuleOptions {
+  /** Host role IDs allowed to mutate Region records. */
+  adminRoleIds: Array<number | string>;
+}
+
+export const REGION_MODULE_OPTIONS = Symbol.for('@wasnaker/module-region/options');
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProvinceEntity, RegencyEntity])],
+  imports: [
+    TypeOrmModule.forFeature([ProvinceEntity, RegencyEntity]),
+  ],
   providers: [
     RegionService,
     RegionSeedService,
+    RegionWriteGuard,
     { provide: ProvinceRepository, useClass: ProvincesRelationalRepository },
     { provide: RegencyRepository, useClass: RegenciesRelationalRepository },
   ],
   controllers: [RegionController],
   exports: [RegionService, RegionSeedService],
 })
-export class RegionModule {}
+export class RegionModule {
+  static register(options: RegionModuleOptions): DynamicModule {
+    return {
+      module: RegionModule,
+      providers: [{ provide: REGION_MODULE_OPTIONS, useValue: options }],
+    };
+  }
+}
