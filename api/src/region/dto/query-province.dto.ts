@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Province } from '../domain/province';
 
 export class FilterProvinceDto {
@@ -16,21 +16,25 @@ export class SortProvinceDto {
   @IsString()
   orderBy: keyof Province;
 
-  @ApiProperty()
-  @IsString()
+  @ApiProperty({ enum: ['ASC', 'DESC'] })
+  @Transform(({ value }) => String(value).toUpperCase())
+  @IsIn(['ASC', 'DESC'])
   order: string;
 }
 
 export class QueryProvinceDto {
   @ApiPropertyOptional()
-  @Transform(({ value }) => (value ? Number(value) : 1))
-  @IsNumber()
+  @Transform(({ value }) => (value === undefined || value === '' ? 1 : Number(value)))
+  @IsInt()
+  @Min(1)
   @IsOptional()
   page?: number;
 
   @ApiPropertyOptional()
-  @Transform(({ value }) => (value ? Number(value) : 10))
-  @IsNumber()
+  @Transform(({ value }) => (value === undefined || value === '' ? 10 : Number(value)))
+  @IsInt()
+  @Min(1)
+  @Max(50)
   @IsOptional()
   limit?: number;
 
