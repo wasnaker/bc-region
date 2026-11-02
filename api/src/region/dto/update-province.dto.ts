@@ -1,5 +1,13 @@
 import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { IsLatitude, IsLongitude, IsOptional, IsString, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 import { CreateProvinceDto } from './create-province.dto';
 
 export class UpdateProvinceDto extends PartialType(CreateProvinceDto) {
@@ -17,11 +25,17 @@ export class UpdateProvinceDto extends PartialType(CreateProvinceDto) {
 
   @ApiPropertyOptional({ example: -6.9, nullable: true })
   @IsOptional()
-  @IsLatitude()
+  @Type(() => Number)
+  @IsNumber({ allowNaN: false, allowInfinity: false })
+  @Min(-90)
+  @Max(90)
   latitude?: number | null;
 
   @ApiPropertyOptional({ example: 107.6, nullable: true })
   @IsOptional()
-  @IsLongitude()
+  @Type(() => Number)
+  @IsNumber({ allowNaN: false, allowInfinity: false })
+  @Min(-180)
+  @Max(180)
   longitude?: number | null;
 }
