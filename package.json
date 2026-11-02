@@ -34,7 +34,12 @@
     "./locales/id": "./web/src/services/i18n/locales/id/module-region.json",
     "./locales/ja": "./web/src/services/i18n/locales/ja/module-region.json",
     "./locales/ko": "./web/src/services/i18n/locales/ko/module-region.json",
-    "./locales/zh": "./web/src/services/i18n/locales/zh/module-region.json"
+    "./locales/zh": "./web/src/services/i18n/locales/zh/module-region.json",
+    "./api/entities": {
+      "types": "./api/dist/region/region.entities.d.ts",
+      "require": "./api/dist/region/region.entities.js",
+      "default": "./api/dist/region/region.entities.js"
+    }
   },
   "scripts": {
     "build:api": "tsc -p api/tsconfig.build.json",
@@ -164,6 +169,9 @@
       ],
       "manifest": [
         "web/src/modules/region/module.manifest.ts"
+      ],
+      "api/entities": [
+        "api/dist/region/region.entities.d.ts"
       ]
     }
   }
