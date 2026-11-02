@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "@/services/i18n/client";
-import { useProvinces, useProvincesServerSide, useProvince, useDeleteProvince } from "../hooks/use-regions";
+import { useProvincesServerSide, useProvince, useDeleteProvince } from "../hooks/use-regions";
 import { useMasterDetail } from "@/core/master-detail/use-master-detail";
 import { SmallTable, type SmallTableColumn, type DetailTab } from "@/components/small-table";
 import { ProvinceFormDialog } from "../components/province-form-dialog";
