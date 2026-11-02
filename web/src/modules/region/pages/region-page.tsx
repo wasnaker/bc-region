@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "@/services/i18n/client";
-import { useProvinces, useProvince, useDeleteProvince } from "../hooks/use-regions";
+import { useProvinces, useProvincesServerSide, useProvince, useDeleteProvince } from "../hooks/use-regions";
 import { useMasterDetail } from "@/core/master-detail/use-master-detail";
 import { SmallTable, type SmallTableColumn, type DetailTab } from "@/components/small-table";
 import { ProvinceFormDialog } from "../components/province-form-dialog";
@@ -70,9 +70,15 @@ function PageInner() {
   }
 
   // ── Table data ──────────────────────────────────────────────────────────
-  const [page, setPage] = useState(1);
-  const { data: provincesData, isLoading } = useProvinces(page, PER_PAGE);
-  const provinces = provincesData?.data ?? [];
+  // Server-side pagination: page & search sudah dihandle useTable
+  const {
+    data: provinces,
+    isLoading,
+    page,
+    setPage,
+    search,
+    setSearch,
+  } = useProvincesServerSide();
 
   // ── Columns ─────────────────────────────────────────────────────────────
   const columns: SmallTableColumn<Province>[] = useMemo(
@@ -231,10 +237,6 @@ function PageInner() {
           detailLoading={detailLoading}
           tabs={tabs}
           customTabBody={customTabBody}
-          searchableKeys={["name", "isoCode"]}
-          getSearchText={(item) =>
-            [item.name, item.isoCode ?? ""].join(" ")
-          }
           perPage={PER_PAGE}
           emptyText={tableEmptyText}
           tabEmptyText={t("detail.empty")}
@@ -254,30 +256,8 @@ function PageInner() {
           }
         />
 
-        {/* Pagination controls (for infinity-style next pages) */}
-        {provinces.length > 0 && (
-          <div className="mt-4 flex justify-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-            >
-              {t("actions.prev_page")}
-            </Button>
-            <span className="flex items-center px-3 text-sm text-muted-foreground">
-              {t("table.page", { page, total: provincesData?.hasNextPage ? page + 1 : page })}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((p) => p + 1)}
-              disabled={!provincesData?.hasNextPage}
-            >
-              {t("actions.next_page")}
-            </Button>
-          </div>
-        )}
+        {/* Pagination controls (server-side) */}
+        {/* Pagination now handled by SmallTable component */}
       </div>
 
       {/* ── Create / Edit dialog ──────────────────────────────────────── */}

@@ -13,6 +13,7 @@ import {
   useDeleteRegencyService,
 } from "../services/region-api";
 import type { Province, Regency } from "../types/region";
+import { useTable } from "@/core/table/use-table";
 
 // ── Province hooks ─────────────────────────────────────────────────────────
 
@@ -30,6 +31,36 @@ export function useProvinces(
         throw new Error(Object.values(res.data.errors).join(", "));
       }
       return res.data;
+    },
+  });
+}
+
+/**
+ * Hook server-side untuk provinces — menggunakan useTable.
+ * Pakai ini untuk modul yang mau menggunakan pola server-side pagination.
+ *
+ * Note: API response tidak mengembalikan `total`, jadi totalPages dihitung
+ * berdasarkan hasNextPage. Untuk modul dengan banyak data, backend perlu
+ * ditambah endpoint yang mengembalikan total count.
+ */
+export function useProvincesServerSide() {
+  const service = useGetProvincesService();
+  return useTable<Province>({
+    queryKey: ["region", "provinces"],
+    defaultLimit: 20,
+    searchDebounce: 300,
+    fetchFn: async ({ page, limit, search }) => {
+      const filters = search ? { search } : undefined;
+      const res = await service({ page, limit, filters });
+      if (res.status === HTTP_CODES_ENUM.UNPROCESSABLE_ENTITY) {
+        throw new Error(Object.values(res.data?.errors ?? {}).join(", "));
+      }
+      // Hitung total estimate: jika ada next page, estimasi = page * limit + data.length
+      // Ini tidak akurat tapi cukup untuk navigasi pagination
+      const data = (res.data as { data?: Province[]; hasNextPage?: boolean })?.data ?? [];
+      const hasNextPage = (res.data as { hasNextPage?: boolean })?.hasNextPage ?? false;
+      const total = hasNextPage ? (page * limit) + data.length : (page - 1) * limit + data.length;
+      return { data, total };
     },
   });
 }
