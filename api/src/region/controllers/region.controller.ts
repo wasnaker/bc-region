@@ -34,9 +34,8 @@ import { RegionAccessGuard } from '../security/region-access.guard';
 import { InfinityPaginationResponseDto, InfinityPaginationResponse } from '../../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../../utils/infinity-pagination';
 
-// NOTE: When integrating with the host brocoders-api, wrap write endpoints
-// with @Roles(RoleEnum.admin) + RolesGuard to enforce admin-only access.
-// The host app provides AuthGuard('jwt') and the Roles* infrastructure.
+// The host supplies JWT authentication and resolves module-declared action
+// permissions through RegionAccessGuard; no host-specific role IDs are assumed.
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RegionAccessGuard)
