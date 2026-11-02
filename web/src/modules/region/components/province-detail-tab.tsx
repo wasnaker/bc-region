@@ -3,7 +3,7 @@
 import { useRegencies } from "../hooks/use-regions";
 import { useTranslation } from "@/services/i18n/client";
 import type { Province } from "../types/region";
-import type { DetailTab } from "./small-table";
+import type { DetailTab } from "@/components/small-table";
 
 interface ProvinceOverviewTabProps {
   item: Province;

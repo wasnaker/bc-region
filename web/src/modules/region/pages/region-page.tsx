@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "@/services/i18n/client";
 import { useProvinces, useProvince, useDeleteProvince } from "../hooks/use-regions";
-import { SmallTable, type SmallTableColumn, type DetailTab } from "../components/small-table";
+import { SmallTable, type SmallTableColumn, type DetailTab } from "@/components/small-table";
 import { ProvinceFormDialog } from "../components/province-form-dialog";
 import { ProvinceOverviewTab, ProvinceRegenciesTab } from "../components/province-detail-tab";
 import { Button } from "@/components/ui/button";
