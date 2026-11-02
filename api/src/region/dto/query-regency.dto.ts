@@ -3,8 +3,8 @@ import { Transform, Type } from 'class-transformer';
 import {
   IsEnum,
   IsIn,
+  Max,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -56,6 +56,7 @@ export class QueryRegencyDto {
   @Transform(({ value }) => (value === undefined || value === '' ? 10 : Number(value)))
   @IsInt()
   @Min(1)
+  @Max(50)
   @IsOptional()
   limit?: number;
 
