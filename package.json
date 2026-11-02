@@ -1,0 +1,29 @@
+{
+  "name": "@wasnaker/module-region",
+  "version": "0.1.0",
+  "description": "Wasnaker Indonesia administrative region frontend module",
+  "license": "GPL-2.0-only",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "web/src/modules/region",
+    "web/src/services/i18n/locales"
+  ],
+  "exports": {
+    ".": "./web/src/modules/region/index.ts",
+    "./manifest": "./web/src/modules/region/module.manifest.ts",
+    "./locales/en": "./web/src/services/i18n/locales/en/module-region.json",
+    "./locales/id": "./web/src/services/i18n/locales/id/module-region.json",
+    "./locales/ja": "./web/src/services/i18n/locales/ja/module-region.json",
+    "./locales/ko": "./web/src/services/i18n/locales/ko/module-region.json",
+    "./locales/zh": "./web/src/services/i18n/locales/zh/module-region.json"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.95.2",
+    "lucide-react": "^1.18.0",
+    "next": "^16.2.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-i18next": "^16.6.2"
+  }
+}
