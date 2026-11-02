@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "@/services/i18n/client";
 import { useProvinces, useProvince, useDeleteProvince } from "../hooks/use-regions";
+import { useMasterDetail } from "@/core/master-detail/use-master-detail";
 import { SmallTable, type SmallTableColumn, type DetailTab } from "@/components/small-table";
 import { ProvinceFormDialog } from "../components/province-form-dialog";
 import { ProvinceOverviewTab, ProvinceRegenciesTab } from "../components/province-detail-tab";
@@ -22,35 +23,24 @@ function PageInner() {
   const { t } = useTranslation("module-region");
   const qc = useQueryClient();
 
-  // ── URL hash state (SSR-safe via Suspense) ──────────────────────────────
-  const [selectedId, setSelectedId] = useState<number | string | null>(null);
-  const [showDetail, setShowDetail] = useState(false);
+  // ── State master-detail (pola core: seleksi, panel, hash) ──────────────
+  const {
+    selectedId,
+    showDetail,
+    select,
+    close,
+    toggle,
+    afterSave,
+  } = useMasterDetail();
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Initialize selectedId from hash on mount
-  useEffect(() => {
-    const hash = window.location.hash.replace("#", "");
-    if (hash) {
-      setSelectedId(hash);
-      setShowDetail(true);
-    }
-  }, []);
-
-  function syncHash(id: number | string | null) {
-    if (typeof window !== "undefined") {
-      window.history.replaceState(
-        null,
-        "",
-        id != null ? `#${id}` : window.location.pathname
-      );
-    }
-  }
-
-  function selectItem(id: number | string) {
-    setSelectedId(id);
-    setShowDetail(true);
-    syncHash(id);
-  }
+  // Detail SELALU diambil dari endpoint detail, bukan dari baris list.
+  const detailId =
+    selectedId != null && /^\d+$/.test(String(selectedId))
+      ? Number(selectedId)
+      : null;
+  const { data: selectedProvince, isLoading: detailLoading } =
+    useProvince(detailId);
 
   // ── Dialogs ────────────────────────────────────────────────────────────
   const [formOpen, setFormOpen] = useState(false);
@@ -72,11 +62,9 @@ function PageInner() {
   async function handleDelete(id: Province["id"]) {
     if (!window.confirm(t("confirm.delete.message"))) return;
     await deleteMutation.mutateAsync({ id });
-    // Clear selection if deleting the selected row
+    // Tutup panel bila yang dihapus adalah baris terpilih.
     if (String(selectedId) === String(id)) {
-      setSelectedId(null);
-      setShowDetail(false);
-      syncHash(null);
+      close();
     }
     setRefreshKey((k) => k + 1);
   }
@@ -185,9 +173,7 @@ function PageInner() {
           variant="ghost"
           size="icon-sm"
           title={showDetail ? t("actions.collapse") : t("actions.expand")}
-          onClick={() => {
-            setShowDetail((v) => !v);
-          }}
+          onClick={toggle}
         >
           {showDetail ? (
             <ArrowRightIcon className="size-3.5" />
@@ -238,9 +224,11 @@ function PageInner() {
           items={provinces}
           columns={columns}
           selectedId={selectedId}
-          onSelectId={selectItem}
+          onSelectId={select}
           getItemId={(item) => item.id}
           showDetail={showDetail}
+          detailItem={selectedProvince ?? null}
+          detailLoading={detailLoading}
           tabs={tabs}
           customTabBody={customTabBody}
           searchableKeys={["name", "isoCode"]}
@@ -258,11 +246,7 @@ function PageInner() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  setShowDetail(false);
-                  setSelectedId(null);
-                  syncHash(null);
-                }}
+                onClick={close}
               >
                 {t("actions.collapse")}
               </Button>
@@ -307,7 +291,8 @@ function PageInner() {
         onSuccess={(savedId) => {
           qc.invalidateQueries({ queryKey: ["region", "provinces"] });
           setRefreshKey((k) => k + 1);
-          selectItem(savedId);
+          // Pola core: panel detail menampilkan data hasil simpan.
+          afterSave(savedId);
         }}
       />
     </div>
