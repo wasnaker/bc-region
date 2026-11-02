@@ -1,35 +1,33 @@
-# Integrasi Modul Region ke brocoders-react-web
+# Integrasi Module Region ke brocoders-react-web
 
-Modul ini source-only — disalin ke host app, bukan dijalankan sendiri.
-Path di bawah memakai variabel: `$MODULE` = repo ini, `$HOST_WEB` = root repo `brocoders-react-web`.
+Module Region dipasang sebagai package, bukan disalin ke source host. Repository
+ini adalah satu-satunya source of truth untuk halaman, komponen, hooks, service,
+manifest, dan resource bahasa Region.
 
-## 1. Salin kode modul
+## 1. Pasang package
 
-```bash
-cp -r "$MODULE/web/src/modules/region" "$HOST_WEB/src/modules/region"
-```
-
-## 2. Salin terjemahan i18n
+Dari root `brocoders-react-web`:
 
 ```bash
-for lang in en id ja ko zh; do
-  cp "$MODULE/web/src/services/i18n/locales/$lang/module-region.json" \
-     "$HOST_WEB/src/services/i18n/locales/$lang/"
-done
+npm run module:add -- region --ref <tag-atau-commit>
 ```
 
-## 3. Daftarkan manifest + route halaman
+Perintah tersebut memasang `@wasnaker/module-region` sebagai dependency Git
+yang dikunci ke ref yang diberikan, lalu membangkitkan manifest registry dan
+registry resource i18n. Jangan menyalin atau mengedit isi package di frontend.
 
-Ikuti pola modul `post` — modul dimuat lewat registry core:
+Untuk menghapus:
 
-- `src/core/modules/registry.ts` — otomatis oleh `node scripts/generate-module-registry.mjs`
-  (atau otomatis saat `npm run deploy`).
+```bash
+npm run module:rm -- region
+```
 
-**Manifest hanya mendaftarkan menu — route halaman tetap harus dibuat** di host
-(Next.js tidak bisa generate route dari manifest). Buat route entry di `src/app/admin/region/page.tsx`; gunakan komponen yang sudah memiliki auth guard di `src/app/[language]/admin/region/page-content.tsx` (atau buat file tersebut bila mengintegrasikan modul dari awal). Ikuti pola
-`src/app/admin/region/`:
+## 2. Daftarkan route host
 
-`src/app/admin/region/page.tsx` — server component + metadata (the content component can reuse the existing auth-guarded implementation):
+Next.js membutuhkan route entry fisik di host. Route ini hanya adapter tipis;
+implementasi halaman tetap berada di package:
+
+`src/app/admin/region/page.tsx`:
 
 ```tsx
 import type { Metadata } from "next";
@@ -48,14 +46,14 @@ export default function Page() {
 }
 ```
 
-`src/app/[language]/admin/region/page-content.tsx` — gate auth + render modul:
+`src/app/[language]/admin/region/page-content.tsx`:
 
 ```tsx
 "use client";
 
 import { RoleEnum } from "@/services/api/types/role";
 import withPageRequiredAuth from "@/services/auth/with-page-required-auth";
-import { RegionPage } from "@/modules/region";
+import { RegionPage } from "@wasnaker/module-region";
 
 function Region() {
   return <RegionPage />;
@@ -64,44 +62,32 @@ function Region() {
 export default withPageRequiredAuth(Region, { roles: [RoleEnum.ADMIN] });
 ```
 
-Halaman tersedia di **`/admin/region`** (menu item `menu` di manifest, position 60).
+## 3. Kontrak package
 
-## 4. Endpoint backend yang dipakai
+- Manifest: `@wasnaker/module-region/manifest`
+- Public API halaman/komponen: `@wasnaker/module-region`
+- Resource bahasa: `@wasnaker/module-region/locales/<language>`
+- Host menyediakan alias `@/*`, auth, API client, routing, UI primitives,
+  React Query, dan peer dependencies.
+- Host menjalankan `transpilePackages` untuk module packages.
+- Manifest dan locale registry dibangkitkan dari dependency package; tidak ada
+  source module yang disalin ke `src/modules` atau folder locale host.
 
-Semua lewat API_URL host (`/api/v1`):
+## 4. Endpoint API
+
+Semua request menggunakan API_URL host (`/api/v1`):
 
 | Aksi | Endpoint |
 |------|----------|
 | List provinsi | `GET /v1/region/provinces?page&limit&filters&sort` |
 | Detail provinsi | `GET /v1/region/provinces/:id` |
-| Create / Update / Delete | `POST` / `PATCH :id` / `DELETE :id` |
-| List kab/kota | `GET /v1/region/regencies?filters={"provinceId":X}` |
-| CRUD kab/kota | sama seperti provinsi |
+| CRUD provinsi | `POST/PATCH/DELETE /v1/region/provinces` |
+| List kab/kota | `GET /v1/region/regencies?filters=...` |
+| Detail kab/kota | `GET /v1/region/regencies/:id` |
+| CRUD kab/kota | `POST/PATCH/DELETE /v1/region/regencies` |
 
-Envelope respons list: `{ data, hasNextPage }` (lihat `api/INTEGRATION.md` di folder backend).
+## 5. Pengembangan lokal
 
-## Pola UI: klik row → panel kanan (SmallTable)
-
-- State `showDetail` (smallView) **di halaman**, bukan di komponen tabel.
-- Klik row → `selectItem(id)`: set `selectedId` + `setShowDetail(true)` (auto-expand) + sinkron `window.location.hash`.
-- Panel kanan muncul hanya jika `selectedId !== null && showDetail`.
-- Saat panel terbuka, tabel hanya menampilkan kolom `primary: true`.
-- Toolbar panel: Edit + Delete + toggle ◀/▶.
-- CRUD via Dialog terpisah; sukses → `invalidateQueries` → select item baru.
-
-## Verifikasi type-check (opsional)
-
-`web/tsconfig.check.json` extends tsconfig host via **relative path**
-(`../../../brocoders-react-web/...`) — asumsi kedua repo berdampingan di
-parent yang sama:
-
-```
-brocoders/
-├── brocoders-modules/bc-region/   ← repo ini
-└── brocoders-react-web/           ← host
-```
-
-```bash
-cd "$MODULE/web"
-"$HOST_WEB/node_modules/.bin/tsc" -p tsconfig.check.json
-```
+Edit kode hanya di repository `bc-region`. Setelah perubahan diuji, buat
+commit/tag baru dan perbarui ref dependency di host. Jangan melakukan hotfix
+pada salinan package di repository frontend.
