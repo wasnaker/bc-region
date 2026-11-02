@@ -147,5 +147,24 @@
     "yup": {
       "optional": true
     }
+  },
+  "typesVersions": {
+    "*": {
+      "api": [
+        "api/dist/index.d.ts"
+      ],
+      "api/manifest": [
+        "api/dist/region/region.manifest.d.ts"
+      ],
+      "api/migrations": [
+        "api/dist/region/database/migrations/index.d.ts"
+      ],
+      "web": [
+        "web/src/modules/region/index.ts"
+      ],
+      "manifest": [
+        "web/src/modules/region/module.manifest.ts"
+      ]
+    }
   }
 }
