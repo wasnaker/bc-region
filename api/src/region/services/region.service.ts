@@ -127,8 +127,8 @@ export class RegionService {
       });
     }
 
-    // Cascade: remove all regencies belonging to this province first
-    await this.regencyRepository.removeByProvinceId(id);
+    // The PostgreSQL foreign key owns the cascade. Delete the parent once so
+    // the database guarantees atomic referential integrity.
     await this.provinceRepository.remove(id);
   }
 

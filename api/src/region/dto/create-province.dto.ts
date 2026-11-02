@@ -1,6 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
-import { IsLatitude, IsLongitude } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class CreateProvinceDto {
   @ApiProperty({ example: 'Jawa Barat', maxLength: 190 })
@@ -17,11 +25,17 @@ export class CreateProvinceDto {
 
   @ApiPropertyOptional({ example: -6.9, nullable: true })
   @IsOptional()
-  @IsLatitude()
+  @Type(() => Number)
+  @IsNumber({ allowNaN: false, allowInfinity: false })
+  @Min(-90)
+  @Max(90)
   latitude?: number | null;
 
   @ApiPropertyOptional({ example: 107.6, nullable: true })
   @IsOptional()
-  @IsLongitude()
+  @Type(() => Number)
+  @IsNumber({ allowNaN: false, allowInfinity: false })
+  @Min(-180)
+  @Max(180)
   longitude?: number | null;
 }

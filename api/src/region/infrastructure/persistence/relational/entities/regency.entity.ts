@@ -31,7 +31,7 @@ export class RegencyEntity extends EntityRelationalHelper {
   province?: ProvinceEntity;
 
   @Index()
-  @Column({ type: String })
+  @Column({ type: String, length: 190 })
   name: string;
 
   @Column({ type: String, default: 'kabupaten' })
