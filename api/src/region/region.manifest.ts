@@ -10,7 +10,7 @@ export interface BackendModuleManifest {
   permissions: readonly ModulePermissionDefinition[];
 }
 
-export const regionModuleManifest: BackendModuleManifest = {
+export const moduleManifest: BackendModuleManifest = {
   id: 'region',
   version: '0.2.0',
   capabilities: ['api', 'web'],
@@ -21,3 +21,5 @@ export const regionModuleManifest: BackendModuleManifest = {
     { name: 'delete:region', description: 'Allows deleting provinces and regencies' },
   ],
 };
+
+export const regionModuleManifest = moduleManifest;
