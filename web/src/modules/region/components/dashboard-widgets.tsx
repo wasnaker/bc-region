@@ -6,13 +6,11 @@ import { useTranslation } from "@/services/i18n/client";
 import {
   useGetProvincesService,
   useGetRegenciesService,
-  type ProvinceListResponse,
-  type RegencyListResponse,
 } from "../services/region-api";
 
 const PAGE_SIZE = 50;
 
-type PaginatedResponse<T> = {
+type ApiPageResponse<T> = {
   data?: {
     data?: T[];
     hasNextPage?: boolean;
@@ -20,7 +18,7 @@ type PaginatedResponse<T> = {
 };
 
 async function countAllPages<T>(
-  fetchPage: (page: number) => Promise<PaginatedResponse<T>>
+  fetchPage: (page: number) => Promise<ApiPageResponse<T>>
 ): Promise<number> {
   let page = 1;
   let total = 0;
@@ -67,14 +65,11 @@ function RegionMetric({
 }
 
 export function ProvinceCountWidget() {
-  const { t } = useTranslation("module-region");
   const service = useGetProvincesService();
   const query = useQuery({
     queryKey: ["region", "dashboard", "province-count"],
     queryFn: () =>
-      countAllPages((page) =>
-        service({ page, limit: PAGE_SIZE })
-      ) as Promise<ProvinceListResponse extends never ? never : number>,
+      countAllPages((page) => service({ page, limit: PAGE_SIZE })),
     staleTime: 60_000,
   });
 
@@ -93,9 +88,7 @@ export function RegencyCountWidget() {
   const query = useQuery({
     queryKey: ["region", "dashboard", "regency-count"],
     queryFn: () =>
-      countAllPages((page) =>
-        service({ page, limit: PAGE_SIZE })
-      ) as Promise<RegencyListResponse extends never ? never : number>,
+      countAllPages((page) => service({ page, limit: PAGE_SIZE })),
     staleTime: 60_000,
   });
 
