@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { ProvinceEntity } from '../../infrastructure/persistence/relational/entities/province.entity';
-import { RegencyEntity } from '../../infrastructure/persistence/relational/entities/regency.entity';
+import { ProvinceEntity } from '../infrastructure/persistence/relational/entities/province.entity';
+import { RegencyEntity } from '../infrastructure/persistence/relational/entities/regency.entity';
 
 import {
   PROVINCE_SEED,
