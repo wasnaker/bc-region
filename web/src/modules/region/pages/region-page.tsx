@@ -73,6 +73,8 @@ function PageInner() {
   // Server-side pagination: page & search sudah dihandle useTable
   const {
     data: provinces,
+    total,
+    limit,
     isLoading,
     page,
     setPage,
@@ -228,6 +230,12 @@ function PageInner() {
         {/* ── Table ─────────────────────────────────────────────────── */}
         <SmallTable<Province>
           items={provinces}
+          total={total}
+          searchValue={search}
+          onSearchChange={setSearch}
+          page={page}
+          onPageChange={setPage}
+          perPage={limit}
           columns={columns}
           selectedId={selectedId}
           onSelectId={select}
