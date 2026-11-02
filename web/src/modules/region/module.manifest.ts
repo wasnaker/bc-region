@@ -16,7 +16,7 @@ export default defineModuleManifest({
       label: { namespace: "module-region", key: "menu" },
       href: "/admin/region",
       position: 60,
-      permission: "read:user",
+      permission: "read:region",
       icon: MapPin,
     },
   ],
