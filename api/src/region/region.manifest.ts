@@ -15,9 +15,9 @@ export const regionModuleManifest: BackendModuleManifest = {
   version: '0.2.0',
   capabilities: ['api', 'web'],
   permissions: [
-    {
-      name: 'read:region',
-      description: 'Allows viewing Region module navigation and data',
-    },
+    { name: 'read:region', description: 'Allows viewing Region module navigation and data' },
+    { name: 'create:region', description: 'Allows creating provinces and regencies' },
+    { name: 'update:region', description: 'Allows updating provinces and regencies' },
+    { name: 'delete:region', description: 'Allows deleting provinces and regencies' },
   ],
 };

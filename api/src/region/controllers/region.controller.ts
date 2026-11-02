@@ -30,7 +30,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RegionWriteGuard } from '../security/region-write.guard';
+import { RegionAccessGuard } from '../security/region-access.guard';
 import { InfinityPaginationResponseDto, InfinityPaginationResponse } from '../../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../../utils/infinity-pagination';
 
@@ -39,7 +39,7 @@ import { infinityPagination } from '../../utils/infinity-pagination';
 // The host app provides AuthGuard('jwt') and the Roles* infrastructure.
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RegionAccessGuard)
 @ApiTags('Region')
 @Controller({ path: 'region', version: '1' })
 export class RegionController {
@@ -47,7 +47,6 @@ export class RegionController {
 
   // ─── Provinces ─────────────────────────────────────────────────────────────
 
-  @UseGuards(RegionWriteGuard)
   @ApiCreatedResponse({ type: Province })
   @Post('provinces')
   @HttpCode(HttpStatus.CREATED)
@@ -89,7 +88,6 @@ export class RegionController {
     return this.regionService.findProvinceById(id);
   }
 
-  @UseGuards(RegionWriteGuard)
   @ApiOkResponse({ type: Province })
   @Patch('provinces/:id')
   @HttpCode(HttpStatus.OK)
@@ -101,7 +99,6 @@ export class RegionController {
     return this.regionService.updateProvince(id, updateProvinceDto);
   }
 
-  @UseGuards(RegionWriteGuard)
   @Delete('provinces/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiParam({ name: 'id', type: String, required: true })
@@ -113,7 +110,6 @@ export class RegionController {
 
   // ─── Regencies ─────────────────────────────────────────────────────────────
 
-  @UseGuards(RegionWriteGuard)
   @ApiCreatedResponse({ type: Regency })
   @Post('regencies')
   @HttpCode(HttpStatus.CREATED)
@@ -163,7 +159,6 @@ export class RegionController {
     return this.regionService.findRegencyById(id);
   }
 
-  @UseGuards(RegionWriteGuard)
   @ApiOkResponse({ type: Regency })
   @Patch('regencies/:id')
   @HttpCode(HttpStatus.OK)
@@ -175,7 +170,6 @@ export class RegionController {
     return this.regionService.updateRegency(id, updateRegencyDto);
   }
 
-  @UseGuards(RegionWriteGuard)
   @Delete('regencies/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiParam({ name: 'id', type: String, required: true })

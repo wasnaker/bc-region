@@ -1,7 +1,7 @@
 # Backend package
 
 The backend capability is built as CommonJS JavaScript plus TypeScript declarations.
-This is intentional: the current NestJS host compiles to CommonJS, while the web
+This is intentional: the NestJS host currently compiles to CommonJS, while the web
 entry point remains TypeScript source consumed by Next.js `transpilePackages`.
 
 ## Install
@@ -15,20 +15,33 @@ The Git dependency runs `prepare` and builds `api/dist` before installation.
 
 ## Register in NestJS
 
+The host supplies an authorization adapter. The module never assumes a fixed
+admin role ID or owns the host's role/permission tables.
+
 ```ts
 import { RegionModule } from '@wasnaker/module-region/api';
-import { RoleEnum } from './roles/roles.enum';
+import { ModuleRuntimeModule, ModuleAuthorizationService } from './module-runtime';
 
 @Module({
-  imports: [RegionModule.register({ adminRoleIds: [RoleEnum.admin] })],
+  imports: [
+    RegionModule.registerAsync({
+      imports: [ModuleRuntimeModule],
+      inject: [ModuleAuthorizationService],
+      useFactory: (authorization) => ({
+        authorize: (roleId, permission) =>
+          authorization.hasPermission(roleId, permission),
+      }),
+    }),
+  ],
 })
 export class AppModule {}
 ```
 
-The host owns the PostgreSQL connection and authentication strategy named `jwt`.
-The module owns its entities, repositories, services, controllers, DTOs and seed data.
-Write access is delegated to the host's configured role IDs; if no IDs are
-configured, writes are denied.
+The module enforces `read:region`, `create:region`, `update:region` and
+`delete:region` at the API boundary. The host owns PostgreSQL, JWT
+authentication, role/permission persistence, migration execution and seed
+lifecycle. The module owns its controllers, DTOs, domain, services, entities,
+repositories, migration and data seed.
 
 ## Migrations
 
@@ -52,4 +65,5 @@ DataSource. Seed execution remains an explicit host lifecycle operation.
 
 ```bash
 npm run build:api
+npm run verify:api-package
 ```
