@@ -10,8 +10,8 @@ import {
 
 const PAGE_SIZE = 50;
 
-async function countAllPages<T>(
-  fetchPage: (page: number) => Promise<{ data?: { data?: T[]; hasNextPage?: boolean } }>
+async function countAllPages(
+  fetchPage: (page: number) => Promise<any>
 ): Promise<number> {
   let page = 1;
   let total = 0;
