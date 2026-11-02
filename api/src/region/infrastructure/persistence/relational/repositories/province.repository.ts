@@ -34,10 +34,14 @@ export class ProvincesRelationalRepository implements ProvinceRepository {
     sortOptions?: SortProvinceDto[] | null;
     paginationOptions: IPaginationOptions;
   }): Promise<Province[]> {
-    const where: FindOptionsWhere<ProvinceEntity> = {};
-    if (filterOptions?.search) {
-      where.name = ILike(`%${filterOptions.search}%`);
-    }
+    const search = filterOptions?.search?.trim();
+    // OR-search across the fields exposed by the province list table.
+    const where: FindOptionsWhere<ProvinceEntity>[] = search
+      ? [
+          { name: ILike(`%${search}%`) },
+          { isoCode: ILike(`%${search}%`) },
+        ]
+      : [{}];
 
     const entities = await this.provinceRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
