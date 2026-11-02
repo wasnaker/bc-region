@@ -20,7 +20,8 @@ admin role ID or owns the host's role/permission tables.
 
 ```ts
 import { RegionModule } from '@wasnaker/module-region/api';
-import { ModuleRuntimeModule, ModuleAuthorizationService } from './module-runtime';
+import { ModuleRuntimeModule } from './module-runtime/module-runtime.module';
+import { ModuleAuthorizationService } from './module-runtime/module-authorization.service';
 
 @Module({
   imports: [
