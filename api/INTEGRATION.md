@@ -51,18 +51,23 @@ repositories, migration and data seed.
 Register the exported migration class explicitly in the host TypeORM DataSource:
 
 ```ts
-import { CreateRegion1793466257948612617 } from
-  '@wasnaker/module-region/api/migrations';
+import {
+  AddRegionUniquenessConstraints1793466257948612618,
+  CreateRegion1793466257948612617,
+} from '@wasnaker/module-region/api/migrations';
 
 migrations: [
   CreateRegion1793466257948612617,
+  AddRegionUniquenessConstraints1793466257948612618,
   ...existingMigrations,
 ]
 ```
 
 Do not copy module source, entities, migrations, or seeds into the host repository.
 The host migration runner executes module migrations against the host PostgreSQL
-DataSource. Seed execution remains an explicit host lifecycle operation.
+DataSource. The Region uniqueness migration checks for existing duplicate business
+keys before creating unique indexes; if duplicates exist, it stops with an
+explicit remediation message instead of silently deleting data. Seed execution remains an explicit host lifecycle operation.
 
 ## Build locally
 
