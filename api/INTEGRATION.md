@@ -11,66 +11,51 @@ npm install github:wasnaker/bc-region#<immutable-commit-sha>
 ```
 
 Pin an immutable commit SHA in both `package.json` and `package-lock.json`.
-The Git dependency runs `prepare` and builds `api/dist` before installation.
+
+## Universal API package contract
+
+Every backend-capable module exposes:
+
+- `<package>/api`: its NestJS module and public API exports.
+- `<package>/api/manifest`: named `moduleManifest`, including module ID,
+  version, capabilities and permission definitions.
+- `<package>/api/definition`: named `moduleDefinition`, the canonical host
+  integration contract. It contains the manifest, `registerAsync()`, entity
+  classes, migration classes and seed service classes.
+- `<package>/api/entities`: named `moduleEntities` array.
+- `<package>/api/migrations`: named `moduleMigrations` array.
+- `<package>/api/seeds`: named `moduleSeedServices` array.
+
+A module without entities, migrations or seed providers exports an empty array.
+The package owns controllers, DTOs, domain, services, entities, repositories,
+migrations, permissions and seed data. It never owns the host's database
+connection, JWT strategy, roles table or permission persistence.
 
 ## Register in NestJS
 
-The host supplies an authorization adapter. The module never assumes a fixed
-admin role ID or owns the host's role/permission tables.
-
-```ts
-import { RegionModule } from '@wasnaker/module-region/api';
-import { ModuleRuntimeModule } from './module-runtime/module-runtime.module';
-import { ModuleAuthorizationService } from './module-runtime/module-authorization.service';
-
-@Module({
-  imports: [
-    RegionModule.registerAsync({
-      imports: [ModuleRuntimeModule],
-      inject: [ModuleAuthorizationService],
-      useFactory: (authorization) => ({
-        authorize: (roleId, permission) =>
-          authorization.hasPermission(roleId, permission),
-      }),
-    }),
-  ],
-})
-export class AppModule {}
-```
+The host scans installed `@wasnaker/module-*` dependencies and generates its
+backend module registry. Each API package's `moduleDefinition.registerAsync()`
+is called automatically with the host authorization adapter. The host should
+not add a package-specific `RegionModule` import or manually list its entities,
+migrations or seed services.
 
 The module enforces `read:region`, `create:region`, `update:region` and
-`delete:region` at the API boundary. The host owns PostgreSQL, JWT
-authentication, role/permission persistence, migration execution and seed
-lifecycle. Configure the root NestJS TypeORM connection with
-`autoLoadEntities: true`; the module registers its entities through
-`TypeOrmModule.forFeature()` and they are then included in the runtime DataSource.
-For the standalone TypeORM CLI DataSource, also import `REGION_ENTITIES` from
-`@wasnaker/module-region/api/entities` and spread it into `entities`; CLI
-DataSources do not inherit Nest module metadata. The module owns its controllers, DTOs, domain, services, entities,
-repositories, migration and data seed.
+`delete:region` at the API boundary. The host supplies the authorization
+adapter and resolves permissions from its PostgreSQL role-permission relation.
 
-## Migrations
+## PostgreSQL lifecycle
 
-Register the exported migration class explicitly in the host TypeORM DataSource:
+The host owns one PostgreSQL DataSource. Its generated registry automatically
+collects each installed API module's entities and migration classes for both
+NestJS runtime TypeORM configuration and the standalone TypeORM CLI DataSource.
+Migration execution remains an explicit deployment operation; package install
+and application startup never run migrations.
 
-```ts
-import {
-  AddRegionUniquenessConstraints1793466257948612618,
-  CreateRegion1793466257948612617,
-} from '@wasnaker/module-region/api/migrations';
-
-migrations: [
-  CreateRegion1793466257948612617,
-  AddRegionUniquenessConstraints1793466257948612618,
-  ...existingMigrations,
-]
-```
-
-Do not copy module source, entities, migrations, or seeds into the host repository.
-The host migration runner executes module migrations against the host PostgreSQL
-DataSource. The Region uniqueness migration checks for existing duplicate business
-keys before creating unique indexes; if duplicates exist, it stops with an
-explicit remediation message instead of silently deleting data. Seed execution remains an explicit host lifecycle operation.
+The host's explicit relational seed runner discovers module seed service
+providers from the same definitions. Each module seed must be idempotent.
+Permission definitions are seeded before module seeds, and the host's default
+admin role receives newly registered permissions without overwriting existing
+role assignments.
 
 ## Build locally
 
