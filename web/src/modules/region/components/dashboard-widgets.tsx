@@ -1,17 +1,26 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import Link from "@/components/link";
 import { useTranslation } from "@/services/i18n/client";
 import {
   useGetProvincesService,
   useGetRegenciesService,
+  type ProvinceListResponse,
+  type RegencyListResponse,
 } from "../services/region-api";
 
 const PAGE_SIZE = 50;
 
-async function countAllPages(
-  fetchPage: (page: number) => Promise<any>
+type PaginatedResponse<T> = {
+  data?: {
+    data?: T[];
+    hasNextPage?: boolean;
+  };
+};
+
+async function countAllPages<T>(
+  fetchPage: (page: number) => Promise<PaginatedResponse<T>>
 ): Promise<number> {
   let page = 1;
   let total = 0;
@@ -30,13 +39,11 @@ async function countAllPages(
 }
 
 function RegionMetric({
-  title,
   value,
   isLoading,
   isError,
   href,
 }: {
-  title: string;
   value?: number;
   isLoading: boolean;
   isError: boolean;
@@ -65,13 +72,14 @@ export function ProvinceCountWidget() {
   const query = useQuery({
     queryKey: ["region", "dashboard", "province-count"],
     queryFn: () =>
-      countAllPages((page) => service({ page, limit: PAGE_SIZE })),
+      countAllPages((page) =>
+        service({ page, limit: PAGE_SIZE })
+      ) as Promise<ProvinceListResponse extends never ? never : number>,
     staleTime: 60_000,
   });
 
   return (
     <RegionMetric
-      title={t("dashboard.provinces")}
       value={query.data}
       isLoading={query.isLoading}
       isError={query.isError}
@@ -81,18 +89,18 @@ export function ProvinceCountWidget() {
 }
 
 export function RegencyCountWidget() {
-  const { t } = useTranslation("module-region");
   const service = useGetRegenciesService();
   const query = useQuery({
     queryKey: ["region", "dashboard", "regency-count"],
     queryFn: () =>
-      countAllPages((page) => service({ page, limit: PAGE_SIZE })),
+      countAllPages((page) =>
+        service({ page, limit: PAGE_SIZE })
+      ) as Promise<RegencyListResponse extends never ? never : number>,
     staleTime: 60_000,
   });
 
   return (
     <RegionMetric
-      title={t("dashboard.regencies")}
       value={query.data}
       isLoading={query.isLoading}
       isError={query.isError}
