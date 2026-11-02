@@ -10,28 +10,39 @@ import {
 
 const PAGE_SIZE = 50;
 
-type ApiPageResponse<T> = {
-  data?: {
-    data?: T[];
-    hasNextPage?: boolean;
-  };
+type PagePayload = {
+  data: unknown[];
+  hasNextPage: boolean;
 };
 
-async function countAllPages<T>(
-  fetchPage: (page: number) => Promise<ApiPageResponse<T>>
+function isPagePayload(value: unknown): value is PagePayload {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    Array.isArray(candidate.data) &&
+    typeof candidate.hasNextPage === "boolean"
+  );
+}
+
+async function countAllPages(
+  fetchPage: (page: number) => Promise<unknown>
 ): Promise<number> {
   let page = 1;
   let total = 0;
 
   while (true) {
     const response = await fetchPage(page);
-    const rows = response.data?.data ?? [];
-    total += rows.length;
-
-    if (!response.data?.hasNextPage || rows.length === 0) {
-      return total;
+    if (typeof response !== "object" || response === null) {
+      throw new Error("Unexpected Region pagination response");
     }
 
+    const payload = (response as Record<string, unknown>).data;
+    if (!isPagePayload(payload)) {
+      throw new Error("Unexpected Region pagination response");
+    }
+
+    total += payload.data.length;
+    if (!payload.hasNextPage || payload.data.length === 0) return total;
     page += 1;
   }
 }
