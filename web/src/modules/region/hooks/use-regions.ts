@@ -38,11 +38,8 @@ export function useProvinces(
 
 /**
  * Hook server-side untuk provinces — menggunakan useTable.
- * Pakai ini untuk modul yang mau menggunakan pola server-side pagination.
- *
- * Note: API response tidak mengembalikan `total`, jadi totalPages dihitung
- * berdasarkan hasNextPage. Untuk modul dengan banyak data, backend perlu
- * ditambah endpoint yang mengembalikan total count.
+ * Search, filter, sorting, dan pagination diterapkan backend sebelum
+ * pagination; total selalu berasal dari hasil count backend.
  */
 export function useProvincesServerSide() {
   const service = useGetProvincesService();
