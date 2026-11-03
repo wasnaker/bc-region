@@ -14,6 +14,7 @@ import {
 } from "../services/region-api";
 import type { Province, Regency } from "../types/region";
 import { useTable } from "@/core/table/use-table";
+import { SortEnum } from "@/services/api/types/sort-type";
 
 // ── Province hooks ─────────────────────────────────────────────────────────
 
@@ -49,7 +50,8 @@ export function useProvincesServerSide() {
     queryKey: ["region", "provinces"],
     // Default page size mengikuti Core Settings.
     searchDebounce: 300,
-    fetchFn: async ({ page, limit, search, filters, signal }) => {
+    defaultSort: { field: "name", order: "ASC" },
+    fetchFn: async ({ page, limit, search, sort, filters, signal }) => {
       // Search digabung dengan filter lain, bukan menggantikan filter yang ada.
       const activeFilters = Object.fromEntries(
         Object.entries(filters ?? {}).filter(([, value]) => value != null)
@@ -62,6 +64,12 @@ export function useProvincesServerSide() {
           page,
           limit,
           filters: Object.keys(activeFilters).length ? activeFilters : undefined,
+          sort: sort
+            ? [{
+                orderBy: sort.field as keyof Province,
+                order: sort.order === "ASC" ? SortEnum.ASC : SortEnum.DESC,
+              }]
+            : undefined,
         },
         { signal }
       );
