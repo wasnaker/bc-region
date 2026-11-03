@@ -39,6 +39,10 @@ __decorate([
     __metadata("design:type", String)
 ], RegencyEntity.prototype, "name", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: String, unique: true, nullable: true }),
+    __metadata("design:type", Object)
+], RegencyEntity.prototype, "code", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: String, default: 'kabupaten' }),
     __metadata("design:type", String)
 ], RegencyEntity.prototype, "type", void 0);

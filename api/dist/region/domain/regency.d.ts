@@ -10,6 +10,7 @@ export declare class Regency {
     id: number | string;
     provinceId: number | string;
     name: string;
+    code?: string | null;
     type: RegencyTypeEnum;
     isActive: boolean;
     createdAt: Date;

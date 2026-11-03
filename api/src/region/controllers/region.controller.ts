@@ -38,7 +38,7 @@ import { infinityPagination } from '../../utils/infinity-pagination';
 // permissions through RegionAccessGuard; no host-specific role IDs are assumed.
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'), RegionAccessGuard)
+@UseGuards(AuthGuard('jwt'))
 @ApiTags('Region')
 @Controller({ path: 'region', version: '1' })
 export class RegionController {
@@ -47,6 +47,7 @@ export class RegionController {
   // ─── Provinces ─────────────────────────────────────────────────────────────
 
   @ApiCreatedResponse({ type: Province })
+  @UseGuards(RegionAccessGuard)
   @Post('provinces')
   @HttpCode(HttpStatus.CREATED)
   createProvince(
@@ -91,6 +92,7 @@ export class RegionController {
   }
 
   @ApiOkResponse({ type: Province })
+  @UseGuards(RegionAccessGuard)
   @Patch('provinces/:id')
   @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', type: String, required: true })
@@ -101,6 +103,7 @@ export class RegionController {
     return this.regionService.updateProvince(id, updateProvinceDto);
   }
 
+  @UseGuards(RegionAccessGuard)
   @Delete('provinces/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiParam({ name: 'id', type: String, required: true })
@@ -113,6 +116,7 @@ export class RegionController {
   // ─── Regencies ─────────────────────────────────────────────────────────────
 
   @ApiCreatedResponse({ type: Regency })
+  @UseGuards(RegionAccessGuard)
   @Post('regencies')
   @HttpCode(HttpStatus.CREATED)
   createRegency(
@@ -162,6 +166,7 @@ export class RegionController {
   }
 
   @ApiOkResponse({ type: Regency })
+  @UseGuards(RegionAccessGuard)
   @Patch('regencies/:id')
   @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'id', type: String, required: true })
@@ -172,6 +177,7 @@ export class RegionController {
     return this.regionService.updateRegency(id, updateRegencyDto);
   }
 
+  @UseGuards(RegionAccessGuard)
   @Delete('regencies/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiParam({ name: 'id', type: String, required: true })

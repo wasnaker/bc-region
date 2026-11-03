@@ -12,7 +12,7 @@ export interface BackendModuleManifest {
 
 export const moduleManifest: BackendModuleManifest = {
   id: 'region',
-  version: '0.3.5',
+  version: '0.4.0',
   capabilities: ['api', 'web'],
   permissions: [
     { name: 'read:region', description: 'Allows viewing Region module navigation and data' },

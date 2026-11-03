@@ -38,6 +38,13 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateRegencyDto.prototype, "type", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '32.73', description: 'Kode BPS 4 digit' }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.Matches)(/^\d{2}\.\d{2}$/, { message: 'code harus format BPS 4 digit, mis. 32.73' }),
+    __metadata("design:type", Object)
+], UpdateRegencyDto.prototype, "code", void 0);
+__decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: true }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBoolean)(),

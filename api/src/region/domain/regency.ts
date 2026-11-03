@@ -20,6 +20,9 @@ export class Regency {
   @ApiProperty({ example: 'Bandung' })
   name: string;
 
+  @ApiPropertyOptional({ example: '32.73', description: 'Kode BPS 4 digit' })
+  code?: string | null;
+
   @ApiProperty({ example: 'kota' })
   type: RegencyTypeEnum;
 

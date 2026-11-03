@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
 } from 'class-validator';
 import { CreateRegencyDto } from './create-regency.dto';
@@ -26,6 +27,12 @@ export class UpdateRegencyDto extends PartialType(CreateRegencyDto) {
   @IsOptional()
   @IsEnum(RegencyTypeEnum)
   type?: RegencyTypeEnum;
+
+  @ApiPropertyOptional({ example: '32.73', description: 'Kode BPS 4 digit' })
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{2}\.\d{2}$/, { message: 'code harus format BPS 4 digit, mis. 32.73' })
+  code?: string | null;
 
   @ApiPropertyOptional({ example: true })
   @IsOptional()

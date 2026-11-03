@@ -9,6 +9,7 @@ class RegencyMapper {
         domainEntity.id = raw.id;
         domainEntity.provinceId = raw.provinceId;
         domainEntity.name = raw.name;
+        domainEntity.code = raw.code;
         domainEntity.type = raw.type;
         domainEntity.isActive = raw.isActive;
         domainEntity.createdAt = raw.createdAt;
@@ -24,6 +25,9 @@ class RegencyMapper {
             persistenceEntity.provinceId = Number(domainEntity.provinceId);
         }
         persistenceEntity.name = domainEntity.name;
+        if (domainEntity.code !== undefined) {
+            persistenceEntity.code = domainEntity.code;
+        }
         persistenceEntity.type = domainEntity.type;
         persistenceEntity.isActive = domainEntity.isActive ?? true;
         persistenceEntity.createdAt = domainEntity.createdAt;

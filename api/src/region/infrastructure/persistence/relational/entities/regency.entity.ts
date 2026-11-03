@@ -35,6 +35,10 @@ export class RegencyEntity extends EntityRelationalHelper {
   @Column({ type: String, length: 190 })
   name: string;
 
+  /** Kode BPS 4 digit, mis. 11.01 */
+  @Column({ type: String, unique: true, nullable: true })
+  code: string | null;
+
   @Column({ type: String, default: 'kabupaten' })
   type: string;
 

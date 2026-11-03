@@ -5,6 +5,8 @@ export declare class RegencyEntity extends EntityRelationalHelper {
     provinceId: number;
     province?: ProvinceEntity;
     name: string;
+    /** Kode BPS 4 digit, mis. 11.01 */
+    code: string | null;
     type: string;
     isActive: boolean;
     createdAt: Date;

@@ -5,6 +5,7 @@ export declare class UpdateRegencyDto extends UpdateRegencyDto_base {
     provinceId?: Regency['provinceId'];
     name?: string;
     type?: RegencyTypeEnum;
+    code?: string | null;
     isActive?: boolean;
 }
 export {};

@@ -36,6 +36,10 @@ __decorate([
     __metadata("design:type", String)
 ], Regency.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ example: '32.73', description: 'Kode BPS 4 digit' }),
+    __metadata("design:type", Object)
+], Regency.prototype, "code", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ example: 'kota' }),
     __metadata("design:type", String)
 ], Regency.prototype, "type", void 0);

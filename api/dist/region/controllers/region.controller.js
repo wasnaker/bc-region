@@ -98,6 +98,7 @@ let RegionController = class RegionController {
 exports.RegionController = RegionController;
 __decorate([
     (0, swagger_1.ApiCreatedResponse)({ type: province_1.Province }),
+    (0, common_1.UseGuards)(region_access_guard_1.RegionAccessGuard),
     (0, common_1.Post)('provinces'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     __param(0, (0, common_1.Body)()),
@@ -126,6 +127,7 @@ __decorate([
 ], RegionController.prototype, "findOneProvince", null);
 __decorate([
     (0, swagger_1.ApiOkResponse)({ type: province_1.Province }),
+    (0, common_1.UseGuards)(region_access_guard_1.RegionAccessGuard),
     (0, common_1.Patch)('provinces/:id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, required: true }),
@@ -136,6 +138,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RegionController.prototype, "updateProvince", null);
 __decorate([
+    (0, common_1.UseGuards)(region_access_guard_1.RegionAccessGuard),
     (0, common_1.Delete)('provinces/:id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, required: true }),
@@ -146,6 +149,7 @@ __decorate([
 ], RegionController.prototype, "removeProvince", null);
 __decorate([
     (0, swagger_1.ApiCreatedResponse)({ type: regency_1.Regency }),
+    (0, common_1.UseGuards)(region_access_guard_1.RegionAccessGuard),
     (0, common_1.Post)('regencies'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     __param(0, (0, common_1.Body)()),
@@ -174,6 +178,7 @@ __decorate([
 ], RegionController.prototype, "findOneRegency", null);
 __decorate([
     (0, swagger_1.ApiOkResponse)({ type: regency_1.Regency }),
+    (0, common_1.UseGuards)(region_access_guard_1.RegionAccessGuard),
     (0, common_1.Patch)('regencies/:id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, required: true }),
@@ -184,6 +189,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RegionController.prototype, "updateRegency", null);
 __decorate([
+    (0, common_1.UseGuards)(region_access_guard_1.RegionAccessGuard),
     (0, common_1.Delete)('regencies/:id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     (0, swagger_1.ApiParam)({ name: 'id', type: String, required: true }),
@@ -194,7 +200,7 @@ __decorate([
 ], RegionController.prototype, "removeRegency", null);
 exports.RegionController = RegionController = __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), region_access_guard_1.RegionAccessGuard),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, swagger_1.ApiTags)('Region'),
     (0, common_1.Controller)({ path: 'region', version: '1' }),
     __metadata("design:paramtypes", [region_service_1.RegionService])
