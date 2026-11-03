@@ -28,7 +28,8 @@
     "of": "/",
     "page": "{{total}} ページ中 {{page}} ページ目",
     "search": "都道府県を検索…",
-    "search_label": "名称または ISO コードで検索"
+    "search_label": "名称または ISO コードで検索",
+    "error": "データを読み込めませんでした。もう一度お試しください。"
   },
   "detail": {
     "overview": "概要",
