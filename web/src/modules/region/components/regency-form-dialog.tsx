@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "@/services/i18n/client";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { FormDialogLayout } from "@/components/form/form-dialog-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -130,15 +124,27 @@ export function RegencyFormDialog({
   const provinces = provincesData?.data ?? [];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {isEditing ? t("actions.edit_regency") : t("actions.create_regency")}
-          </DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <FormDialogLayout
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditing ? t("actions.edit_regency") : t("actions.create_regency")}
+      onSubmit={handleSubmit}
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isPending}
+          >
+            {t("actions.cancel")}
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? t("actions.saving") : t("actions.save")}
+          </Button>
+        </>
+      }
+    >
           {/* Province */}
           <div className="space-y-1.5">
             <Label htmlFor="regency-province">
@@ -219,21 +225,6 @@ export function RegencyFormDialog({
             </Label>
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isPending}
-            >
-              {t("actions.cancel")}
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t("actions.saving") : t("actions.save")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    </FormDialogLayout>
   );
 }
