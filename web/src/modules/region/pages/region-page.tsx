@@ -79,6 +79,8 @@ function PageInner() {
     setPage,
     search,
     setSearch,
+    sort,
+    setSort,
   } = useProvincesServerSide();
 
   // ── Columns ─────────────────────────────────────────────────────────────
@@ -235,6 +237,8 @@ function PageInner() {
           page={page}
           onPageChange={setPage}
           perPage={limit}
+          sort={sort}
+          onSortChange={setSort}
           columns={columns}
           selectedId={selectedId}
           onSelectId={select}
