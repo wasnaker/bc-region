@@ -75,6 +75,7 @@ function PageInner() {
     limit,
     isLoading,
     isFetching,
+    error,
     page,
     setPage,
     search,
@@ -253,6 +254,8 @@ function PageInner() {
           isLoading={isLoading}
           isFetching={isFetching}
           loadingText={t("table.loading")}
+          error={error}
+          errorText={t("table.error")}
           tabEmptyText={t("detail.empty")}
           paginationOfLabel={t("table.of")}
           previousPageLabel={t("actions.prev_page")}
