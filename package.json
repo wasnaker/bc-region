@@ -1,6 +1,6 @@
 {
   "name": "@wasnaker/module-region",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Wasnaker Indonesia administrative region module (NestJS API and Next.js web)",
   "license": "GPL-2.0-only",
   "type": "module",
