@@ -74,6 +74,7 @@ function PageInner() {
     total,
     limit,
     isLoading,
+    isFetching,
     page,
     setPage,
     search,
@@ -205,9 +206,7 @@ function PageInner() {
     );
   }
 
-  const tableEmptyText = isLoading
-    ? t("table.loading")
-    : t("table.empty");
+  const tableEmptyText = t("table.empty");
 
   return (
     <div className="page-content--wide">
@@ -244,6 +243,9 @@ function PageInner() {
           tabs={tabs}
           customTabBody={customTabBody}
           emptyText={tableEmptyText}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          loadingText={t("table.loading")}
           tabEmptyText={t("detail.empty")}
           paginationOfLabel={t("table.of")}
           toolbar={toolbar}
