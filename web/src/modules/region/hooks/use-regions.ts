@@ -56,11 +56,17 @@ export function useProvincesServerSide() {
       if (res.status === HTTP_CODES_ENUM.UNPROCESSABLE_ENTITY) {
         throw new Error(Object.values(res.data?.errors ?? {}).join(", "));
       }
-      // Hitung total estimate: jika ada next page, estimasi = page * limit + data.length
-      // Ini tidak akurat tapi cukup untuk navigasi pagination
-      const data = (res.data as { data?: Province[]; hasNextPage?: boolean })?.data ?? [];
+      // Hitung total: pakai total dari API (akurat) jika tersedia,
+      // fallback ke estimasi dari hasNextPage bila total tidak ada.
+      const data = (res.data as { data?: Province[]; hasNextPage?: boolean; total?: number })?.data ?? [];
+      const apiTotal = (res.data as { total?: number })?.total;
       const hasNextPage = (res.data as { hasNextPage?: boolean })?.hasNextPage ?? false;
-      const total = hasNextPage ? (page * limit) + data.length : (page - 1) * limit + data.length;
+      const total =
+        apiTotal !== undefined
+          ? apiTotal
+          : hasNextPage
+          ? (page * limit) + data.length
+          : (page - 1) * limit + data.length;
       return { data, total };
     },
   });

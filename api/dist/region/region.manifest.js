@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.regionModuleManifest = exports.moduleManifest = void 0;
 exports.moduleManifest = {
     id: 'region',
-    version: '0.3.2',
+    version: '0.3.3',
     capabilities: ['api', 'web'],
     permissions: [
         { name: 'read:region', description: 'Allows viewing Region module navigation and data' },
