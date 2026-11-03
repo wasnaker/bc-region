@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "@/services/i18n/client";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { FormDialogLayout } from "@/components/form/form-dialog-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -117,15 +111,27 @@ export function ProvinceFormDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {isEditing ? t("actions.edit_province") : t("actions.create_province")}
-          </DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <FormDialogLayout
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditing ? t("actions.edit_province") : t("actions.create_province")}
+      onSubmit={handleSubmit}
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isPending}
+          >
+            {t("actions.cancel")}
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? t("actions.saving") : t("actions.save")}
+          </Button>
+        </>
+      }
+    >
           {/* Name */}
           <div className="space-y-1.5">
             <Label htmlFor="province-name">
@@ -189,21 +195,6 @@ export function ProvinceFormDialog({
             </div>
           </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isPending}
-            >
-              {t("actions.cancel")}
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t("actions.saving") : t("actions.save")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    </FormDialogLayout>
   );
 }
