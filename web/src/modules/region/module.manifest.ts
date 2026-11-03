@@ -25,6 +25,9 @@ export default defineModuleManifest({
     },
   ],
   // Satu module dapat mendaftarkan beberapa widget sekaligus.
+  // defaultVisible: konstanta statis modul — meng-override default true saat
+  // global Settings › Misc › dashboardWidgetsEnabled = ON. Preferensi user
+  // (toggle di toolbar dashboard) tetap menang atas nilai ini.
   dashboardWidgets: [
     {
       id: "region-province-count",
@@ -33,6 +36,7 @@ export default defineModuleManifest({
       position: 60,
       permission: "read:region",
       component: ProvinceCountWidget,
+      defaultVisible: true,
     },
     {
       id: "region-regency-count",
@@ -41,6 +45,7 @@ export default defineModuleManifest({
       position: 70,
       permission: "read:region",
       component: RegencyCountWidget,
+      defaultVisible: false,
     },
   ],
 });
