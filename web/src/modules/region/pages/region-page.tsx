@@ -116,6 +116,7 @@ function PageInner() {
       {
         key: "coordinates",
         label: t("table.coordinates"),
+        sortable: false,
         render: (item) => {
           if (item.latitude == null || item.longitude == null) return "—";
           return (
