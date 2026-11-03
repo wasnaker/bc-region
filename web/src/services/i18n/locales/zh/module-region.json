@@ -26,7 +26,9 @@
     "loading": "加载中…",
     "empty": "暂无省份。",
     "of": "/",
-    "page": "第 {{page}} 页，共 {{total}} 页"
+    "page": "第 {{page}} 页，共 {{total}} 页",
+    "search": "搜索省份…",
+    "search_label": "按名称或 ISO 代码搜索省份"
   },
   "detail": {
     "overview": "概览",
