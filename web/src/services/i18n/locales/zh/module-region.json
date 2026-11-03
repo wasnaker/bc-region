@@ -28,7 +28,8 @@
     "of": "/",
     "page": "第 {{page}} 页，共 {{total}} 页",
     "search": "搜索省份…",
-    "search_label": "按名称或 ISO 代码搜索省份"
+    "search_label": "按名称或 ISO 代码搜索省份",
+    "error": "数据加载失败，请重试。"
   },
   "detail": {
     "overview": "概览",
