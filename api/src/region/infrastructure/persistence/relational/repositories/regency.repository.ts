@@ -92,6 +92,19 @@ export class RegenciesRelationalRepository implements RegencyRepository {
     return this.regencyRepository.count();
   }
 
+  async countWithFilter(
+    filterOptions?: FilterRegencyDto | null,
+  ): Promise<number> {
+    const where: any = {};
+    if (filterOptions?.provinceId !== undefined && filterOptions.provinceId !== null) {
+      where.provinceId = Number(filterOptions.provinceId);
+    }
+    if (filterOptions?.type) {
+      where.type = filterOptions.type;
+    }
+    return this.regencyRepository.count({ where });
+  }
+
   async update(id: Regency['id'], payload: Partial<Regency>): Promise<Regency> {
     const entity = await this.regencyRepository.findOne({
       where: { id: Number(id) },

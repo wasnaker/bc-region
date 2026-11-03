@@ -67,14 +67,17 @@ export class RegionController {
       limit = 50;
     }
 
-    return infinityPagination(
-      await this.regionService.findManyProvincesWithPagination({
-        filterOptions: query.filters ?? null,
-        sortOptions: query.sort ?? null,
-        paginationOptions: { page, limit },
-      }),
-      { page, limit },
+    const data = await this.regionService.findManyProvincesWithPagination({
+      filterOptions: query.filters ?? null,
+      sortOptions: query.sort ?? null,
+      paginationOptions: { page, limit },
+    });
+
+    const total = await this.regionService.countProvinces(
+      query.filters ?? null,
     );
+
+    return infinityPagination(data, { page, limit }, total);
   }
 
   @ApiOkResponse({ type: Province })
@@ -130,7 +133,6 @@ export class RegionController {
       limit = 50;
     }
 
-    // Normalize filter options: merge convenience ?province_id= with filters JSON
     const filterOptions: FilterRegencyDto | null = query.filters ?? {};
     if (filterOptions) {
       if (query.provinceId !== undefined) {
@@ -138,14 +140,15 @@ export class RegionController {
       }
     }
 
-    return infinityPagination(
-      await this.regionService.findManyRegenciesWithPagination({
-        filterOptions,
-        sortOptions: query.sort ?? null,
-        paginationOptions: { page, limit },
-      }),
-      { page, limit },
-    );
+    const data = await this.regionService.findManyRegenciesWithPagination({
+      filterOptions,
+      sortOptions: query.sort ?? null,
+      paginationOptions: { page, limit },
+    });
+
+    const total = await this.regionService.countRegencies(filterOptions);
+
+    return infinityPagination(data, { page, limit }, total);
   }
 
   @ApiOkResponse({ type: Regency })

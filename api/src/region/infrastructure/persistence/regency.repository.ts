@@ -37,6 +37,10 @@ export abstract class RegencyRepository {
 
   abstract countAll(): Promise<number>;
 
+  abstract countWithFilter(
+    filterOptions?: FilterRegencyDto | null,
+  ): Promise<number>;
+
   abstract update(
     id: Regency['id'],
     payload: DeepPartial<Regency>,

@@ -32,6 +32,10 @@ export abstract class ProvinceRepository {
 
   abstract countAll(): Promise<number>;
 
+  abstract countWithFilter(
+    filterOptions?: FilterProvinceDto | null,
+  ): Promise<number>;
+
   abstract update(
     id: Province['id'],
     payload: DeepPartial<Province>,

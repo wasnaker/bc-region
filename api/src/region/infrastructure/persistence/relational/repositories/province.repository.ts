@@ -88,6 +88,21 @@ export class ProvincesRelationalRepository implements ProvinceRepository {
     return this.provinceRepository.count();
   }
 
+  async countWithFilter(
+    filterOptions?: FilterProvinceDto | null,
+  ): Promise<number> {
+    const search = filterOptions?.search?.trim();
+    if (!search) {
+      return this.provinceRepository.count();
+    }
+    return this.provinceRepository.count({
+      where: [
+        { name: ILike(`%${search}%`) },
+        { isoCode: ILike(`%${search}%`) },
+      ],
+    });
+  }
+
   async update(id: Province['id'], payload: Partial<Province>): Promise<Province> {
     const entity = await this.provinceRepository.findOne({
       where: { id: Number(id) },

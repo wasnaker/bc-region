@@ -160,6 +160,13 @@ export class RegionService {
     return this.provinceRepository.countAll();
   }
 
+  async countProvinces(filterOptions?: FilterProvinceDto | null): Promise<number> {
+    if (this.provinceRepository.countWithFilter) {
+      return this.provinceRepository.countWithFilter(filterOptions);
+    }
+    return this.provinceRepository.countAll();
+  }
+
   // ─── Regencies ─────────────────────────────────────────────────────────────
 
   async createRegency(createRegencyDto: CreateRegencyDto): Promise<Regency> {
@@ -290,6 +297,18 @@ export class RegionService {
   }
 
   async countAllRegencies(): Promise<number> {
+    return this.regencyRepository.countAll();
+  }
+
+  async countRegencies(
+    filterOptions?: FilterRegencyDto | null,
+  ): Promise<number> {
+    if (this.regencyRepository.countWithFilter) {
+      return this.regencyRepository.countWithFilter(filterOptions);
+    }
+    if (filterOptions?.provinceId !== undefined) {
+      return this.regencyRepository.countByProvinceId(filterOptions.provinceId);
+    }
     return this.regencyRepository.countAll();
   }
 
