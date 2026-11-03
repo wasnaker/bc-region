@@ -47,7 +47,8 @@ export function useProvincesServerSide() {
   const service = useGetProvincesService();
   return useTable<Province>({
     queryKey: ["region", "provinces"],
-    defaultLimit: 20,
+    // Tidak set defaultLimit — biarkan Settings › Misc (defaultPageSize)
+    // yang menentukan, agar konsisten untuk semua modul.
     searchDebounce: 300,
     fetchFn: async ({ page, limit, search }) => {
       const filters = search ? { search } : undefined;
