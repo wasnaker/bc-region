@@ -26,7 +26,10 @@
     "loading": "불러오는 중…",
     "empty": "아직 주가 없습니다.",
     "of": "/",
-    "page": "{{total}} 페이지 중 {{page}} 페이지"
+    "page": "{{total}} 페이지 중 {{page}} 페이지",
+    "search": "도 검색…",
+    "search_label": "이름 또는 ISO 코드로 검색",
+    "error": "데이터를 불러오지 못했습니다. 다시 시도해 주세요."
   },
   "detail": {
     "overview": "개요",

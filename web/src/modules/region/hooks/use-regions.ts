@@ -14,6 +14,7 @@ import {
 } from "../services/region-api";
 import type { Province, Regency } from "../types/region";
 import { useTable } from "@/core/table/use-table";
+import { SortEnum } from "@/services/api/types/sort-type";
 
 // ── Province hooks ─────────────────────────────────────────────────────────
 
@@ -37,37 +38,60 @@ export function useProvinces(
 
 /**
  * Hook server-side untuk provinces — menggunakan useTable.
- * Pakai ini untuk modul yang mau menggunakan pola server-side pagination.
- *
- * Note: API response tidak mengembalikan `total`, jadi totalPages dihitung
- * berdasarkan hasNextPage. Untuk modul dengan banyak data, backend perlu
- * ditambah endpoint yang mengembalikan total count.
+ * Search, filter, sorting, dan pagination diterapkan backend sebelum
+ * pagination; total selalu berasal dari hasil count backend.
  */
 export function useProvincesServerSide() {
   const service = useGetProvincesService();
   return useTable<Province>({
     queryKey: ["region", "provinces"],
-    // Tidak set defaultLimit — biarkan Settings › Misc (defaultPageSize)
-    // yang menentukan, agar konsisten untuk semua modul.
+    // Default page size mengikuti Core Settings.
     searchDebounce: 300,
-    fetchFn: async ({ page, limit, search }) => {
-      const filters = search ? { search } : undefined;
-      const res = await service({ page, limit, filters });
+    defaultSort: { field: "name", order: "ASC" },
+    fetchFn: async ({ page, limit, search, sort, filters, signal }) => {
+      // Search digabung dengan filter lain, bukan menggantikan filter yang ada.
+      const activeFilters = Object.fromEntries(
+        Object.entries(filters ?? {}).filter(([, value]) => value != null)
+      ) as Record<string, string | number | boolean>;
+
+      if (search) activeFilters.search = search;
+
+      const res = await service(
+        {
+          page,
+          limit,
+          filters: Object.keys(activeFilters).length ? activeFilters : undefined,
+          sort: sort
+            ? [{
+                orderBy: sort.field as keyof Province,
+                order: sort.order === "ASC" ? SortEnum.ASC : SortEnum.DESC,
+              }]
+            : undefined,
+        },
+        { signal }
+      );
+
       if (res.status === HTTP_CODES_ENUM.UNPROCESSABLE_ENTITY) {
         throw new Error(Object.values(res.data?.errors ?? {}).join(", "));
       }
-      // Hitung total: pakai total dari API (akurat) jika tersedia,
-      // fallback ke estimasi dari hasNextPage bila total tidak ada.
-      const data = (res.data as { data?: Province[]; hasNextPage?: boolean; total?: number })?.data ?? [];
-      const apiTotal = (res.data as { total?: number })?.total;
-      const hasNextPage = (res.data as { hasNextPage?: boolean })?.hasNextPage ?? false;
-      const total =
-        apiTotal !== undefined
-          ? apiTotal
-          : hasNextPage
-          ? (page * limit) + data.length
-          : (page - 1) * limit + data.length;
-      return { data, total };
+      if (res.status !== HTTP_CODES_ENUM.OK || !res.data) {
+        throw new Error("Gagal memuat data provinsi");
+      }
+
+      // Endpoint Region mengembalikan total hasil SETELAH filter/search.
+      // Jangan mengestimasi total dari hasNextPage karena pagination bisa salah.
+      const response = res.data as {
+        data?: Province[];
+        total?: number;
+      };
+      if (typeof response.total !== "number") {
+        throw new Error("Respons API provinsi tidak menyertakan total hasil");
+      }
+
+      return {
+        data: response.data ?? [],
+        total: response.total,
+      };
     },
   });
 }

@@ -26,7 +26,10 @@
     "loading": "Memuat…",
     "empty": "Belum ada provinsi.",
     "of": "dari",
-    "page": "Halaman {{page}} dari {{total}}"
+    "page": "Halaman {{page}} dari {{total}}",
+    "search": "Cari provinsi…",
+    "search_label": "Cari provinsi berdasarkan nama atau kode ISO",
+    "error": "Gagal memuat data. Silakan coba lagi."
   },
   "detail": {
     "overview": "Ringkasan",

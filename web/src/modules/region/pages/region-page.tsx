@@ -74,10 +74,14 @@ function PageInner() {
     total,
     limit,
     isLoading,
+    isFetching,
+    error,
     page,
     setPage,
     search,
     setSearch,
+    sort,
+    setSort,
   } = useProvincesServerSide();
 
   // ── Columns ─────────────────────────────────────────────────────────────
@@ -113,6 +117,7 @@ function PageInner() {
       {
         key: "coordinates",
         label: t("table.coordinates"),
+        sortable: false,
         render: (item) => {
           if (item.latitude == null || item.longitude == null) return "—";
           return (
@@ -205,9 +210,7 @@ function PageInner() {
     );
   }
 
-  const tableEmptyText = isLoading
-    ? t("table.loading")
-    : t("table.empty");
+  const tableEmptyText = t("table.empty");
 
   return (
     <div className="page-content--wide">
@@ -231,9 +234,13 @@ function PageInner() {
           total={total}
           searchValue={search}
           onSearchChange={setSearch}
+          searchPlaceholder={t("table.search")}
+          searchLabel={t("table.search_label")}
           page={page}
           onPageChange={setPage}
           perPage={limit}
+          sort={sort}
+          onSortChange={setSort}
           columns={columns}
           selectedId={selectedId}
           onSelectId={select}
@@ -244,8 +251,15 @@ function PageInner() {
           tabs={tabs}
           customTabBody={customTabBody}
           emptyText={tableEmptyText}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          loadingText={t("table.loading")}
+          error={error}
+          errorText={t("table.error")}
           tabEmptyText={t("detail.empty")}
           paginationOfLabel={t("table.of")}
+          previousPageLabel={t("actions.prev_page")}
+          nextPageLabel={t("actions.next_page")}
           toolbar={toolbar}
           renderHeader={renderHeader}
           listHeader={
