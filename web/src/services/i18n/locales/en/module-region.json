@@ -28,7 +28,8 @@
     "of": "of",
     "page": "Page {{page}} of {{total}}",
     "search": "Search provinces…",
-    "search_label": "Search provinces by name or ISO code"
+    "search_label": "Search provinces by name or ISO code",
+    "error": "Unable to load data. Please try again."
   },
   "detail": {
     "overview": "Overview",
