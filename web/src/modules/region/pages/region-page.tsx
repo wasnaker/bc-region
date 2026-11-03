@@ -230,6 +230,8 @@ function PageInner() {
           total={total}
           searchValue={search}
           onSearchChange={setSearch}
+          searchPlaceholder={t("table.search")}
+          searchLabel={t("table.search_label")}
           page={page}
           onPageChange={setPage}
           perPage={limit}
@@ -248,6 +250,8 @@ function PageInner() {
           loadingText={t("table.loading")}
           tabEmptyText={t("detail.empty")}
           paginationOfLabel={t("table.of")}
+          previousPageLabel={t("actions.prev_page")}
+          nextPageLabel={t("actions.next_page")}
           toolbar={toolbar}
           renderHeader={renderHeader}
           listHeader={
