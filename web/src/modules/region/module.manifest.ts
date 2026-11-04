@@ -4,16 +4,25 @@ import {
   ProvinceCountWidget,
   RegencyCountWidget,
 } from "./components/dashboard-widgets";
+import { RegionPage } from "./pages/region-page";
 
 /**
  * Manifest modul Region.
  *
- * Modul ini menyediakan halaman admin di /admin/region.
- * String UI memakai namespace "module-region" (lihat
+ * Modul ini memiliki halaman admin di /admin/region — host hanya menyediakan
+ * route generik + auth. String UI memakai namespace "module-region" (lihat
  * src/services/i18n/locales/<lang>/module-region.json).
  */
 export default defineModuleManifest({
   alias: "region",
+  pages: [
+    {
+      path: "/admin/region",
+      component: RegionPage,
+      title: { namespace: "module-region", key: "title" },
+      permission: "read:region",
+    },
+  ],
   menu: [
     {
       slug: "region",
