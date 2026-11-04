@@ -22,45 +22,35 @@ Untuk menghapus:
 npm run module:rm -- region
 ```
 
-## 2. Daftarkan route host
+## 2. Halaman dideklarasikan di manifest
 
-Next.js membutuhkan route entry fisik di host. Route ini hanya adapter tipis;
-implementasi halaman tetap berada di package:
+Host tidak lagi membutuhkan file route per modul. Halaman admin didaftarkan di
+`web/src/modules/region/module.manifest.ts` melalui `pages`:
 
-`src/app/admin/region/page.tsx`:
-
-```tsx
-import type { Metadata } from "next";
-import { getServerTranslation } from "@/services/i18n";
-import { getRequestLanguage } from "@/services/i18n/get-request-language";
-import Region from "@/app/[language]/admin/region/page-content";
-
-export async function generateMetadata(): Promise<Metadata> {
-  const language = await getRequestLanguage();
-  const { t } = await getServerTranslation(language, "module-region");
-  return { title: t("module-region:title") };
-}
-
-export default function Page() {
-  return <Region />;
-}
+```ts
+pages: [
+  {
+    path: "/admin/region",
+    component: RegionPage,
+    title: { namespace: "module-region", key: "title" },
+    permission: "read:region",
+  },
+],
 ```
 
-`src/app/[language]/admin/region/page-content.tsx`:
+Host menyediakan satu route generik
+(`src/app/[language]/admin/[...modulePath]/page.tsx` dan varian tanpa locale)
+yang:
 
-```tsx
-"use client";
+- mencocokkan URL kanonik ke `pages[].path` lewat `getModulePage()`,
+- merender `pages[].component` milik package (tanpa import modul di host),
+- memakai `pages[].title` untuk metadata/title dokumen,
+- menerapkan `withPageRequiredAuth` (role ADMIN) yang sama untuk semua halaman
+  modul.
 
-import { RoleEnum } from "@/services/api/types/role";
-import withPageRequiredAuth from "@/services/auth/with-page-required-auth";
-import { RegionPage } from "@wasnaker/module-region";
-
-function Region() {
-  return <RegionPage />;
-}
-
-export default withPageRequiredAuth(Region, { roles: [RoleEnum.ADMIN] });
-```
+Tidak ada lagi `src/app/**/admin/region/page.tsx` atau `page-content.tsx` di
+host. Menambah halaman baru cukup menambah entri `pages` + key i18n judul, lalu
+pin ulang package.
 
 ## 3. Kontrak package
 
