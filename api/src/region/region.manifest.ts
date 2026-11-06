@@ -3,11 +3,20 @@ export interface ModulePermissionDefinition {
   description: string;
 }
 
+export interface ModuleRoleDefinition {
+  key: string;
+  name: string;
+  description: string;
+  scope: 'global' | 'customer' | 'branch';
+  permissions: readonly string[];
+}
+
 export interface BackendModuleManifest {
   id: string;
   version: string;
   capabilities: readonly ('api' | 'web')[];
   permissions: readonly ModulePermissionDefinition[];
+  roles?: readonly ModuleRoleDefinition[];
 }
 
 export const moduleManifest: BackendModuleManifest = {
@@ -19,6 +28,17 @@ export const moduleManifest: BackendModuleManifest = {
     { name: 'create:region', description: 'Allows creating provinces and regencies' },
     { name: 'update:region', description: 'Allows updating provinces and regencies' },
     { name: 'delete:region', description: 'Allows deleting provinces and regencies' },
+  ],
+  // Module-owned defaults are appended to the centrally managed Customer role
+  // by the host seeder; each module grants only the access it owns.
+  roles: [
+    {
+      key: 'customer',
+      name: 'Customer',
+      description: 'Standard customer staff account; read access to region reference data.',
+      scope: 'branch',
+      permissions: ['read:region'],
+    },
   ],
 };
 
