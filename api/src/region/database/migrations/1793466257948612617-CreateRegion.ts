@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateRegion1793466257948612617 implements MigrationInterface {
-  name = 'CreateRegion1793466257948612617';
+export class CreateRegion1793466257948 implements MigrationInterface {
+  name = 'CreateRegion1793466257948';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`

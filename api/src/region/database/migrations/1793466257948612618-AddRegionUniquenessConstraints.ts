@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddRegionUniquenessConstraints1793466257948612618
+export class AddRegionUniquenessConstraints1793466257949
   implements MigrationInterface
 {
-  name = 'AddRegionUniquenessConstraints1793466257948612618';
+  name = 'AddRegionUniquenessConstraints1793466257949';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     const duplicateProvinces = await queryRunner.query(`
