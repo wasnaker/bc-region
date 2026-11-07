@@ -10,7 +10,12 @@ import { REGION_MODULE_OPTIONS, RegionModuleOptions } from '../region.options';
 
 interface AuthenticatedRequest {
   method: string;
-  user?: { role?: { id?: number | string } };
+  url?: string;
+  user?: {
+    id?: number | string;
+    role?: { id?: number | string } | null;
+    roles?: Array<{ id?: number | string }>;
+  };
 }
 
 const PERMISSION_BY_METHOD: Record<string, string> = {
@@ -33,10 +38,13 @@ export class RegionAccessGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const permission = PERMISSION_BY_METHOD[request.method.toUpperCase()];
-    const roleIds = (request.user?.roles ?? []).map((role) => role.id);
-
-    // LOGGING: Debugging multi-role assignment
-    console.log(`[RegionAccessGuard] Path: ${request.url}, UserID: ${request.user?.id}, RoleIDs found: ${JSON.stringify(roleIds)}, Permission: ${permission}`);
+    const roleIds = [
+      ...new Set(
+        (request.user?.roles ?? [])
+          .map((role) => role.id)
+          .filter((id): id is number | string => id !== undefined && id !== null),
+      ),
+    ];
 
     if (!permission || roleIds.length === 0 || !this.options?.authorize) {
       throw new ForbiddenException();
