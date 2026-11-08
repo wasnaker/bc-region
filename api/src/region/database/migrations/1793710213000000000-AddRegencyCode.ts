@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddRegencyCode1793710213000000000 implements MigrationInterface {
-  name = 'AddRegencyCode1793710213000000000';
+export class AddRegencyCode1793710213000 implements MigrationInterface {
+  name = 'AddRegencyCode1793710213000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
