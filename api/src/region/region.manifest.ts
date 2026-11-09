@@ -8,6 +8,7 @@ export interface BackendModuleManifest {
   permissions: readonly ModulePermissionDefinition[];
   roleGrants?: readonly ModuleRoleGrantDefinition[];
   authorizationRequires?: readonly string[];
+  requiresServices?: readonly { providerModuleId: string; contractId: string; version: string; }[];
 }
 export const moduleManifest: BackendModuleManifest = {
   id: 'region', version: '0.4.1', capabilities: ['api', 'web'],
