@@ -15,6 +15,11 @@ export const moduleManifest: BackendModuleManifest = {
   // Region continues to be a runtime dependency of Customer, but its
   // authorization contribution targets Customer-owned Roles independently.
   authorizationRequires: ['customer'],
+  requiresServices: [{
+    providerModuleId: 'core',
+    contractId: 'core.authorization.registry',
+    version: '^1.0.0',
+  }],
   permissions: [
     { name: 'read:region', description: 'Allows viewing Region module navigation and data' },
     { name: 'create:region', description: 'Allows creating provinces and regencies' },
