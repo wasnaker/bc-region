@@ -15,6 +15,7 @@ import { RegionPage } from "./pages/region-page";
  */
 export default defineModuleManifest({
   alias: "region",
+  runtimeManaged: true,
   pages: [
     {
       path: "/admin/region",
