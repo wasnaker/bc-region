@@ -11,7 +11,7 @@ export interface BackendModuleManifest {
   requiresServices?: readonly { providerModuleId: string; contractId: string; version: string; }[];
 }
 export const moduleManifest: BackendModuleManifest = {
-  id: 'region', version: '0.4.1', capabilities: ['api', 'web'],
+  id: 'region', version: '0.4.2', capabilities: ['api', 'web'],
   // Region continues to be a runtime dependency of Customer, but its
   // authorization contribution targets Customer-owned Roles independently.
   authorizationRequires: ['customer'],
