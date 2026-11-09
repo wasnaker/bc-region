@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AddRegionUniquenessConstraints1793466257948612618 = void 0;
-class AddRegionUniquenessConstraints1793466257948612618 {
+exports.AddRegionUniquenessConstraints1793466257949 = void 0;
+class AddRegionUniquenessConstraints1793466257949 {
     constructor() {
-        this.name = 'AddRegionUniquenessConstraints1793466257948612618';
+        this.name = 'AddRegionUniquenessConstraints1793466257949';
     }
     async up(queryRunner) {
         const duplicateProvinces = await queryRunner.query(`
@@ -36,4 +36,4 @@ class AddRegionUniquenessConstraints1793466257948612618 {
         await queryRunner.query('CREATE INDEX IF NOT EXISTS "IDX_province_name" ON "province" ("name")');
     }
 }
-exports.AddRegionUniquenessConstraints1793466257948612618 = AddRegionUniquenessConstraints1793466257948612618;
+exports.AddRegionUniquenessConstraints1793466257949 = AddRegionUniquenessConstraints1793466257949;

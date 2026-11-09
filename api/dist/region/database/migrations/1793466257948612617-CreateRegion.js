@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateRegion1793466257948612617 = void 0;
-class CreateRegion1793466257948612617 {
+exports.CreateRegion1793466257948 = void 0;
+class CreateRegion1793466257948 {
     constructor() {
-        this.name = 'CreateRegion1793466257948612617';
+        this.name = 'CreateRegion1793466257948';
     }
     async up(queryRunner) {
         await queryRunner.query(`
@@ -42,4 +42,4 @@ class CreateRegion1793466257948612617 {
         await queryRunner.query('DROP TABLE IF EXISTS "province"');
     }
 }
-exports.CreateRegion1793466257948612617 = CreateRegion1793466257948612617;
+exports.CreateRegion1793466257948 = CreateRegion1793466257948;
