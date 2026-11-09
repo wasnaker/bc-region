@@ -15,6 +15,8 @@ export interface ModuleResolvedScopes {
 }
 
 export interface RegionModuleOptions {
+  /** Host lifecycle gate; protected routes are unavailable while Region is inactive. */
+  isModuleActive?: () => boolean | Promise<boolean>;
   /** Delegate permission decisions to the host's authorization service. */
   authorize: (
     roleId: number | string,
