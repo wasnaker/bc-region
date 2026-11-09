@@ -37,6 +37,9 @@ export class RegionAccessGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    if (this.options?.isModuleActive && !(await this.options.isModuleActive())) {
+      throw new ForbiddenException('Region module is inactive');
+    }
     const permission = PERMISSION_BY_METHOD[request.method.toUpperCase()];
     const roleIds = [
       ...new Set(
