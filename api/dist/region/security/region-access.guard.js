@@ -33,23 +33,16 @@ let RegionAccessGuard = class RegionAccessGuard {
             throw new common_1.ForbiddenException('Region module is inactive');
         }
         const permission = PERMISSION_BY_METHOD[request.method.toUpperCase()];
-        const roleIds = [
-            ...new Set((request.user?.roles ?? [])
-                .map((role) => role.id)
-                .filter((id) => id !== undefined && id !== null)),
-        ];
-        if (!permission || roleIds.length === 0 || !this.options?.authorize) {
+        const userId = request.user?.id;
+        if (userId === undefined || userId === null || !permission || !this.options?.resolveScopes) {
             throw new common_1.ForbiddenException();
         }
-        let allowed = false;
-        for (const roleId of roleIds) {
-            if (await this.options.authorize(roleId, permission)) {
-                allowed = true;
-                break;
-            }
-        }
-        if (!allowed)
+        // Region master data is global, but module Roles still need a current
+        // Core-managed grant and an active assignment scope.
+        const resolved = await this.options.resolveScopes(userId, permission);
+        if (!resolved.global && resolved.scopes.length === 0) {
             throw new common_1.ForbiddenException();
+        }
         return true;
     }
 };

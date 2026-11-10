@@ -3,3 +3,5 @@ export type { RegionModuleOptions, RegionModuleAsyncOptions } from './region/reg
 export { RegionService } from './region/services/region.service';
 export { RegionSeedService } from './region/database/region-seed.service';
 export { REGION_ENTITIES, ProvinceEntity, RegencyEntity } from './region/region.entities';
+export { moduleManifest, regionModuleManifest } from './region/region.manifest';
+export { moduleDefinition } from './region/region.definition';

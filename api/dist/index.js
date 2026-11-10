@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegencyEntity = exports.ProvinceEntity = exports.REGION_ENTITIES = exports.RegionSeedService = exports.RegionService = exports.REGION_MODULE_OPTIONS = exports.RegionModule = void 0;
+exports.moduleDefinition = exports.regionModuleManifest = exports.moduleManifest = exports.RegencyEntity = exports.ProvinceEntity = exports.REGION_ENTITIES = exports.RegionSeedService = exports.RegionService = exports.REGION_MODULE_OPTIONS = exports.RegionModule = void 0;
 var region_module_1 = require("./region/region.module");
 Object.defineProperty(exports, "RegionModule", { enumerable: true, get: function () { return region_module_1.RegionModule; } });
 Object.defineProperty(exports, "REGION_MODULE_OPTIONS", { enumerable: true, get: function () { return region_module_1.REGION_MODULE_OPTIONS; } });
@@ -12,3 +12,8 @@ var region_entities_1 = require("./region/region.entities");
 Object.defineProperty(exports, "REGION_ENTITIES", { enumerable: true, get: function () { return region_entities_1.REGION_ENTITIES; } });
 Object.defineProperty(exports, "ProvinceEntity", { enumerable: true, get: function () { return region_entities_1.ProvinceEntity; } });
 Object.defineProperty(exports, "RegencyEntity", { enumerable: true, get: function () { return region_entities_1.RegencyEntity; } });
+var region_manifest_1 = require("./region/region.manifest");
+Object.defineProperty(exports, "moduleManifest", { enumerable: true, get: function () { return region_manifest_1.moduleManifest; } });
+Object.defineProperty(exports, "regionModuleManifest", { enumerable: true, get: function () { return region_manifest_1.regionModuleManifest; } });
+var region_definition_1 = require("./region/region.definition");
+Object.defineProperty(exports, "moduleDefinition", { enumerable: true, get: function () { return region_definition_1.moduleDefinition; } });
