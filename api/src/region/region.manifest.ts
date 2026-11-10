@@ -11,9 +11,11 @@ export interface BackendModuleManifest {
   requiresServices?: readonly { providerModuleId: string; contractId: string; version: string; }[];
 }
 export const moduleManifest: BackendModuleManifest = {
-  id: 'region', version: '0.4.2', capabilities: ['api', 'web'],
+  id: 'region', version: '0.4.3', capabilities: ['api', 'web'],
   // Region continues to be a runtime dependency of Customer, but its
   // authorization contribution targets Customer-owned Roles independently.
+  // Customer and Customer Branch Admin roles only receive read:region.
+  // create/update/delete:region are reserved for Core Admin role.
   authorizationRequires: ['customer'],
   requiresServices: [{
     providerModuleId: 'core',
@@ -22,9 +24,9 @@ export const moduleManifest: BackendModuleManifest = {
   }],
   permissions: [
     { name: 'read:region', description: 'Allows viewing Region module navigation and data' },
-    { name: 'create:region', description: 'Allows creating provinces and regencies' },
-    { name: 'update:region', description: 'Allows updating provinces and regencies' },
-    { name: 'delete:region', description: 'Allows deleting provinces and regencies' },
+    { name: 'create:region', description: 'Allows creating provinces and regencies (Admin only)' },
+    { name: 'update:region', description: 'Allows updating provinces and regencies (Admin only)' },
+    { name: 'delete:region', description: 'Allows deleting provinces and regencies (Admin only)' },
   ],
   roleGrants: [
     { targetRole: { moduleId: 'customer', key: 'customer' }, permissions: ['read:region'] },
